@@ -1,0 +1,133 @@
+body { 
+font-family: Arial, sans-serif; 
+line-height: 1.4;
+font-size: 12px;
+background: #cecece;
+margin: 0;
+padding: 0;
+}
+
+a { color: #336699; text-decoration: none;}
+a:hover { text-decoration: underline; }
+h1 { margin: 0; padding: 0; }
+h2 { margin: 0; padding: 0; }
+
+#wrap { 
+width: 800px;
+margin: 20px auto;
+}
+
+#header {
+height: 80px;
+background: url(../img/header.jpg) no-repeat;
+}
+#header h1 {
+margin: 0;
+padding: 25px 0 0 30px;
+font-weight: 100;
+font-size: 25px;
+letter-spacing: -1px;
+color: #fff;
+}
+#header h1 a { text-decoration: none; color: #F9F7ED; }
+#header h1 a:hover { text-decoration: none; color: #fff; }
+
+#menu {
+background: url(../img/menu.jpg) no-repeat;
+height: 40px;
+line-height: 30px;
+text-transform: uppercase;
+}
+
+#menu ul {
+list-style-type: none;
+margin: 0;
+padding: 0 20px 0 20px;
+}
+#menu ul li {
+display: block;
+float: left;
+}
+#menu ul li a {
+display: block;
+padding: 0 10px 0 10px;
+text-decoration: none;
+color: #fff;
+font-size: 12px;
+font-weight: 100;
+}
+#menu ul li a:hover {
+color: #fff;
+background: url(../img/menuover.png) repeat-x;
+}
+#menu ul li.right {
+float: right;
+}
+
+#contentwrap {
+background: url(../img/content.jpg) repeat-y;
+padding: 0 20px;
+}
+
+#content {
+margin: 10px 0;
+float: left;
+width: 500px;
+border-bottom: 3px solid #aeaeae;
+border-top: 3px solid #aeaeae;
+padding: 10px;
+}
+#content h2 {
+margin: 0;
+color: #1f1f1f;
+line-height: 30px;
+font-size: 17px;
+font-weight: 100;
+}
+
+#content p { padding: 0 0 10px 0; color: #232323;}
+#content ul { padding: 0 20px 10px 30px; }
+
+#sidebar {
+margin: 10px 0;
+float: right;
+width: 210px;
+padding-top: 10px;
+border-bottom: 3px solid #aeaeae;
+border-top: 3px solid #aeaeae;
+}
+
+#sidebar h3 {
+margin: 0;
+color: #1f1f1f;
+line-height: 30px;
+font-size: 15px;
+font-weight: 100;
+padding-left: 10px;
+}
+
+#sidebar p { padding: 0 10px 10px 10px; color: #232323; }
+
+#sidebar ul {
+padding: 10px 0 25px 20px;
+margin: 0;
+list-style-type: none;
+}
+
+#sidebar ul li {
+background: url(../img/bullet.png) no-repeat center left;
+padding: 2px 0 2px 22px;
+margin: 0;
+}
+
+#footer { 
+text-align: center;
+color: #111;
+font-size: 12px;
+background: url(../img/footer.jpg) no-repeat;
+height: 50px;
+line-height: 50px;
+}
+#footer p { padding: 0; margin: 0; }
+#footer a { color: #111; }
+#footer a:hover { text-decoration: underline; }
