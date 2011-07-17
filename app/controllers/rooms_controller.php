@@ -4,8 +4,9 @@ class RoomsController extends AppController {
 	var $name = 'Rooms';
 
 	function index() {
-		$this->Room->recursive = 0;
-		$this->set('rooms', $this->paginate());
+		$this->Room->recursive = 1;
+		$rooms = $this->Room->find('all');
+		$this->set(compact('rooms'));
 	}
 
 	function view($id = null) {
@@ -16,6 +17,7 @@ class RoomsController extends AppController {
 		$this->set('room', $this->Room->read(null, $id));
 	}
 
+	/*
 	function add() {
 		if (!empty($this->data)) {
 			$this->Room->create();
@@ -58,4 +60,5 @@ class RoomsController extends AppController {
 		$this->Session->setFlash(__('Room was not deleted', true));
 		$this->redirect(array('action' => 'index'));
 	}
+	*/
 }
