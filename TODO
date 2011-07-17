@@ -1,9 +1,11 @@
 Beta:
-*UPLOADS
 *Nicer flash messages
 *Nicer looking buttons
 *Add logging support
 *Add pagination of items to categories/view
 *Add pagination of items to rooms/view
+*Room printouts
 Stable:
 *Add revision history
+*CSV export system
+*Thumbnails for uploaded files

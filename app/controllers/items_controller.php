@@ -80,10 +80,13 @@ class ItemsController extends AppController {
 	}
 	
 	function search() {
-		$this->Item->recursive = 0;
-		
-		if(isset($this->params['url']['search'])) {
-			$search = $this->params['url']['search'];
+		if($this->data) {
+			// We are redirecting the POST request to a pretty looking URL
+			$this->redirect(array('all' => $this->data['Item']['search']));
+		}
+
+		if(isset($this->passedArgs['all'])) {
+			$search = $this->passedArgs['all'];
 		} else {
 			$search = null;
 		}
@@ -94,15 +97,19 @@ class ItemsController extends AppController {
 			$search = array('Item.manufacturer LIKE' => "%{$this->passedArgs['manufacturer']}%");
 		} elseif(isset($this->passedArgs['name'])) {
 			$search = array('Item.name LIKE' => "%{$this->passedArgs['name']}%");
+		} elseif(isset($this->passedArgs['location'])) {
+			$search = array('Item.location LIKE' => "%{$this->passedArgs['location']}%");
 		} elseif($search) {
 			$search = array('OR' => array(
 				'Item.function LIKE' => "%{$search}%",
 				'Item.manufacturer LIKE' => "%{$search}%",
-				'Item.name LIKE' => "%{$search}%"
+				'Item.name LIKE' => "%{$search}%",
+				'Item.location LIKE' => "%{$search}%",
 			));
 		}
 		
 		if($search) {
+			$this->Item->recursive = 0;
 			$this->set('items', $this->paginate('Item', $search));
 		}
 	}

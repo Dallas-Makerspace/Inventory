@@ -3,12 +3,12 @@
 	<dl><?php $i = 0; $class = ' class="altrow"';?>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Function'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo h($item['Item']['function']); ?>
+			<?php echo $this->Html->link($item['Item']['function'],array('action' => 'search', 'function' => $item['Item']['function'])); ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Manufacturer'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $item['Item']['manufacturer']; ?>
+			<?php echo $this->Html->link($item['Item']['manufacturer'],array('action' => 'search', 'manufacturer' => $item['Item']['manufacturer'])); ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Room'); ?></dt>
@@ -18,7 +18,7 @@
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Location'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo h($item['Item']['location']); ?>
+			<?php echo $this->Html->link($item['Item']['location'],array('action' => 'search', 'location' => $item['Item']['location'])); ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Qty'); ?></dt>
@@ -69,6 +69,42 @@
 		</dd>
 	</dl>
 </div>
+
+<div class="related">
+	<h3><?php __('Files');?></h3>
+		<div class="actions">
+		<ul>
+			<li><?php echo $this->Html->link(__('New File', true), array('controller' => 'uploads', 'action' => 'add', 'item' => $item['Item']['id']));?> </li>
+		</ul>
+		</div>
+	<?php if (!empty($item['Upload'])):?>
+	<table cellpadding = "0" cellspacing = "0">
+	<tr>
+		<th><?php __('Name'); ?></th>
+		<th><?php __('Size'); ?></th>
+		<th><?php __('Description'); ?></th>
+		<th><?php __('Actions'); ?></th>
+	</tr>
+	<?php
+		$i = 0;
+		foreach ($item['Upload'] as $upload):
+			$class = null;
+			if ($i++ % 2 == 0) {
+				$class = ' class="altrow"';
+			}
+		?>
+		<tr<?php echo $class;?>>
+			<td><?php echo $this->Html->link($upload['name'],'/files/'.$upload['name']);?></td>
+			<td><?php echo $this->Number->toReadableSize($upload['size']); ?></td>
+			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink(h($upload['description'])));?></td>
+			<!-- <a href="#" class="negative button"><span class="trash icon"></span>Delete</a> -->
+			<td><?php echo $this->Html->link(__('Delete', true),array('controller' => 'uploads', 'action' => 'delete', $upload['id']), null, sprintf(__('Are you sure you want to delete %s?', true), $upload['name'])); ?></td>
+		</tr>
+	<?php endforeach; ?>
+	</table>
+<?php endif; ?>
+</div>
+
 <div class="related">
 	<h3><?php __('Comments');?></h3>
 		<div class="actions">

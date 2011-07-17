@@ -3,7 +3,7 @@ App::import('sanitize');
 class AppController extends Controller {
 
 	var $components = array('RequestHandler', 'LdapAuth', 'Session', 'Security');
-	var $helpers = array('Time', 'Html', 'Session', 'Js', 'Paginator', 'Text', 'Tree');
+	var $helpers = array('Time', 'Html', 'Session', 'Js', 'Paginator', 'Text', 'Tree', 'Number');
 
 	// This function trims excesses whitespace from fields
 	function whitespace(&$value, &$key){

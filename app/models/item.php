@@ -85,6 +85,20 @@ class Item extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => '',
 			'dependent' => true
+		),
+		'Upload' => array(
+			'className' => 'Upload',
+			'foreignKey' => 'item_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => '',
+			'dependent' => true
 		)
 	);
 
