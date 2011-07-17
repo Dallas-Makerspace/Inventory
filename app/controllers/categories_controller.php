@@ -51,6 +51,10 @@ class CategoriesController extends AppController {
 
 		// Read data for this category, including items that are in it
 		$category = $this->Category->read();
+		
+		//TODO: paginate the items
+		//list($category) = $this->paginate('Category',array('Category.id' => $this->id));
+		
 		if (!$category) {
 			// The category doesn't exist
 			$this->Session->setFlash(__('Invalid category', true));
@@ -86,7 +90,7 @@ class CategoriesController extends AppController {
 
 		$parents[0] = "[Top]";
 		$categories = $this->Category->generatetreelist(null,null,null," - ");
-		if($categories) {
+		if ($categories) {
 			foreach ($categories as $key=>$value) {
 				$parents[$key] = $value;
 			}
@@ -102,7 +106,7 @@ class CategoriesController extends AppController {
 		if (!empty($this->data)) {
 			if ($this->Category->save($this->data)) {
 				$this->Session->setFlash(__('The category has been saved', true));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'view', $this->data['Category']['id']));
 			} else {
 				$this->Session->setFlash(__('The category could not be saved. Please, try again.', true));
 			}

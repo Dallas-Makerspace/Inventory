@@ -1,4 +1,10 @@
 <?php $all_categories = $this->requestAction('categories/getAllCategories'); ?>
+<h3>Search</h3>
+<?php
+	echo $this->Form->create('Item',array('type' => 'get', 'action' => 'search'));
+	echo $this->Form->text('search');
+	echo $this->Form->end(array('style' => 'display:none'));
+?>
 <h3>Navigation</h3>
 <form action="../">
 <select onchange="window.open(this.options[this.selectedIndex].value,'_top')">

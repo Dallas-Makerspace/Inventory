@@ -64,12 +64,13 @@ class Item extends AppModel {
 			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
-			'order' => '',
+			'order' => 'Comment.created ASC',
 			'limit' => '',
 			'offset' => '',
 			'exclusive' => '',
 			'finderQuery' => '',
-			'counterQuery' => ''
+			'counterQuery' => '',
+			'dependent' => true
 		),
 		'Verification' => array(
 			'className' => 'Verification',
@@ -77,12 +78,13 @@ class Item extends AppModel {
 			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
-			'order' => '',
+			'order' => 'Verification.created DESC',
 			'limit' => '',
 			'offset' => '',
 			'exclusive' => '',
 			'finderQuery' => '',
-			'counterQuery' => ''
+			'counterQuery' => '',
+			'dependent' => true
 		)
 	);
 

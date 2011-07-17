@@ -34,7 +34,7 @@ table tr td {
 table tr:nth-child(2n) td {
 	background: #f5f5f5;
 }
-table .altrow td {
+table .altrow td, div.altrow {
 	background: #f5f5f5;
 }
 td.actions {

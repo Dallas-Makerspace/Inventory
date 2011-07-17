@@ -1,7 +1,8 @@
 <?php
+App::import('sanitize');
 class AppController extends Controller {
 
-	var $components = array('RequestHandler', 'LdapAuth', 'Session');
+	var $components = array('RequestHandler', 'LdapAuth', 'Session', 'Security');
 	var $helpers = array('Time', 'Html', 'Session', 'Js', 'Paginator', 'Text', 'Tree');
 
 	// This function trims excesses whitespace from fields

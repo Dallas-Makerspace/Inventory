@@ -1,29 +1,9 @@
 <div class="items view">
-<h2><?php  __('Item');?></h2>
+<h2>Item: <?php echo h($item['Item']['name']); ?></h2>
 	<dl><?php $i = 0; $class = ' class="altrow"';?>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Id'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $item['Item']['id']; ?>
-			&nbsp;
-		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Created'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $item['Item']['created']; ?>
-			&nbsp;
-		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Modified'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $item['Item']['modified']; ?>
-			&nbsp;
-		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Name'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $item['Item']['name']; ?>
-			&nbsp;
-		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Function'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $item['Item']['function']; ?>
+			<?php echo h($item['Item']['function']); ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Manufacturer'); ?></dt>
@@ -38,7 +18,7 @@
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Location'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $item['Item']['location']; ?>
+			<?php echo h($item['Item']['location']); ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Qty'); ?></dt>
@@ -46,41 +26,62 @@
 			<?php echo $item['Item']['qty']; ?>
 			&nbsp;
 		</dd>
+		
+		<?php if (!empty($item['Category'])):?>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Categories'); ?></dt>
+		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
+			<?php
+			foreach($item['Category'] as $category) {
+				echo $this->Html->link($category['name'] . ' ',array('controller' => 'categories', 'action' => 'view', $category['id']));
+			}
+			?>
+		</dd>
+		<?php endif; ?>
+		
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Created'); ?></dt>
+		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
+			<?php echo $item['Item']['created']; ?>
+			&nbsp;
+		</dd>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Modified'); ?></dt>
+		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
+			<?php echo $item['Item']['modified']; ?>
+			&nbsp;
+		</dd>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Last Verified'); ?></dt>
+		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
+			<?php if(isset($item['Verification'][0]['created'])): ?>
+			<?php echo $item['Verification'][0]['created']; ?> - <a href="#verifications">view log</a>
+			<?php else: ?>
+			<i>Never</i>
+			<?php endif; ?>
+			&nbsp;
+		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Notes'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $item['Item']['notes']; ?>
-			&nbsp;
+			<?php
+				if(!empty($item['Item']['notes'])) {
+					echo str_replace("\n",'<br />',$this->Text->autoLink(h($item['Item']['notes'])));
+				} else {
+					echo '<i>None</i>';
+				}
+			?>
 		</dd>
 	</dl>
 </div>
-<div class="actions">
-	<h3><?php __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Item', true), array('action' => 'edit', $item['Item']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Delete Item', true), array('action' => 'delete', $item['Item']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $item['Item']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Items', true), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Item', true), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Rooms', true), array('controller' => 'rooms', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Room', true), array('controller' => 'rooms', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Comments', true), array('controller' => 'comments', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Comment', true), array('controller' => 'comments', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Verifications', true), array('controller' => 'verifications', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Verification', true), array('controller' => 'verifications', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Categories', true), array('controller' => 'categories', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Category', true), array('controller' => 'categories', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
 <div class="related">
-	<h3><?php __('Related Comments');?></h3>
+	<h3><?php __('Comments');?></h3>
+		<div class="actions">
+		<ul>
+			<li><?php echo $this->Html->link(__('New Comment', true), array('controller' => 'comments', 'action' => 'add', 'item' => $item['Item']['id']));?> </li>
+		</ul>
+		</div>
 	<?php if (!empty($item['Comment'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
-		<th><?php __('Id'); ?></th>
-		<th><?php __('Item Id'); ?></th>
-		<th><?php __('Create'); ?></th>
-		<th><?php __('Username'); ?></th>
+		<th style="width: 70px;"><?php __('Date'); ?></th>
+		<th style="width: 120px;"><?php __('Username'); ?></th>
 		<th><?php __('Message'); ?></th>
-		<th class="actions"><?php __('Actions');?></th>
 	</tr>
 	<?php
 		$i = 0;
@@ -91,37 +92,29 @@
 			}
 		?>
 		<tr<?php echo $class;?>>
-			<td><?php echo $comment['id'];?></td>
-			<td><?php echo $comment['item_id'];?></td>
-			<td><?php echo $comment['create'];?></td>
-			<td><?php echo $comment['username'];?></td>
-			<td><?php echo $comment['message'];?></td>
-			<td class="actions">
-				<?php echo $this->Html->link(__('View', true), array('controller' => 'comments', 'action' => 'view', $comment['id'])); ?>
-				<?php echo $this->Html->link(__('Edit', true), array('controller' => 'comments', 'action' => 'edit', $comment['id'])); ?>
-				<?php echo $this->Html->link(__('Delete', true), array('controller' => 'comments', 'action' => 'delete', $comment['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $comment['id'])); ?>
-			</td>
+			<td><?php echo $comment['created'];?></td>
+			<td><?php echo h($comment['username']);?></td>
+			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink(h($comment['message'])));?></td>
 		</tr>
 	<?php endforeach; ?>
 	</table>
 <?php endif; ?>
-
-	<div class="actions">
-		<ul>
-			<li><?php echo $this->Html->link(__('New Comment', true), array('controller' => 'comments', 'action' => 'add'));?> </li>
-		</ul>
-	</div>
 </div>
+
 <div class="related">
-	<h3><?php __('Related Verifications');?></h3>
+	<a name="verifications"></a>
+	<h3><?php __('Inventory Verifications');?></h3>
+		<div class="actions">
+		<ul>
+			<li><?php echo $this->Html->link(__('New Verification', true), array('controller' => 'verifications', 'action' => 'add', 'item' => $item['Item']['id']));?> </li>
+		</ul>
+		</div>
 	<?php if (!empty($item['Verification'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
-		<th><?php __('Id'); ?></th>
-		<th><?php __('Item Id'); ?></th>
-		<th><?php __('Created'); ?></th>
-		<th><?php __('Username'); ?></th>
-		<th class="actions"><?php __('Actions');?></th>
+		<th style="width: 70px;"><?php __('Date'); ?></th>
+		<th style="width: 120px;"><?php __('Username'); ?></th>
+		<th><?php __('Message'); ?></th>
 	</tr>
 	<?php
 		$i = 0;
@@ -132,65 +125,19 @@
 			}
 		?>
 		<tr<?php echo $class;?>>
-			<td><?php echo $verification['id'];?></td>
-			<td><?php echo $verification['item_id'];?></td>
 			<td><?php echo $verification['created'];?></td>
-			<td><?php echo $verification['username'];?></td>
-			<td class="actions">
-				<?php echo $this->Html->link(__('View', true), array('controller' => 'verifications', 'action' => 'view', $verification['id'])); ?>
-				<?php echo $this->Html->link(__('Edit', true), array('controller' => 'verifications', 'action' => 'edit', $verification['id'])); ?>
-				<?php echo $this->Html->link(__('Delete', true), array('controller' => 'verifications', 'action' => 'delete', $verification['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $verification['id'])); ?>
-			</td>
+			<td><?php echo h($verification['username']);?></td>
+			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink(h($verification['comment'])));?></td>
 		</tr>
 	<?php endforeach; ?>
 	</table>
 <?php endif; ?>
-
-	<div class="actions">
-		<ul>
-			<li><?php echo $this->Html->link(__('New Verification', true), array('controller' => 'verifications', 'action' => 'add'));?> </li>
-		</ul>
-	</div>
 </div>
-<div class="related">
-	<h3><?php __('Related Categories');?></h3>
-	<?php if (!empty($item['Category'])):?>
-	<table cellpadding = "0" cellspacing = "0">
-	<tr>
-		<th><?php __('Id'); ?></th>
-		<th><?php __('Parent Id'); ?></th>
-		<th><?php __('Name'); ?></th>
-		<th><?php __('Lft'); ?></th>
-		<th><?php __('Rght'); ?></th>
-		<th class="actions"><?php __('Actions');?></th>
-	</tr>
-	<?php
-		$i = 0;
-		foreach ($item['Category'] as $category):
-			$class = null;
-			if ($i++ % 2 == 0) {
-				$class = ' class="altrow"';
-			}
-		?>
-		<tr<?php echo $class;?>>
-			<td><?php echo $category['id'];?></td>
-			<td><?php echo $category['parent_id'];?></td>
-			<td><?php echo $category['name'];?></td>
-			<td><?php echo $category['lft'];?></td>
-			<td><?php echo $category['rght'];?></td>
-			<td class="actions">
-				<?php echo $this->Html->link(__('View', true), array('controller' => 'categories', 'action' => 'view', $category['id'])); ?>
-				<?php echo $this->Html->link(__('Edit', true), array('controller' => 'categories', 'action' => 'edit', $category['id'])); ?>
-				<?php echo $this->Html->link(__('Delete', true), array('controller' => 'categories', 'action' => 'delete', $category['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $category['id'])); ?>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-	</table>
-<?php endif; ?>
 
-	<div class="actions">
-		<ul>
-			<li><?php echo $this->Html->link(__('New Category', true), array('controller' => 'categories', 'action' => 'add'));?> </li>
-		</ul>
-	</div>
-</div>
+<?php
+$page_actions = array(
+	$this->Html->link(__('Edit Item', true), array('action' => 'edit', $item['Item']['id'])),
+	$this->Html->link(__('Delete Item', true), array('action' => 'delete', $item['Item']['id']), null, sprintf(__('Are you sure you want to delete %s?', true), $item['Item']['name']))
+);
+$this->set(compact('page_actions'));
+?>

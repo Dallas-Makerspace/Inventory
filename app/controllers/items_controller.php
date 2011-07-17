@@ -27,7 +27,14 @@ class ItemsController extends AppController {
 			}
 		}
 		$rooms = $this->Item->Room->find('list');
-		$categories = $this->Item->Category->find('list');
+				
+		$category_tree = $this->Item->Category->generatetreelist(null,null,null," - ");
+		if ($category_tree) {
+			foreach ($category_tree as $key=>$value) {
+				$categories[$key] = $value;
+			}
+		}
+		
 		$this->set(compact('rooms', 'categories'));
 	}
 
@@ -39,7 +46,7 @@ class ItemsController extends AppController {
 		if (!empty($this->data)) {
 			if ($this->Item->save($this->data)) {
 				$this->Session->setFlash(__('The item has been saved', true));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'view', $this->data['Item']['id']));
 			} else {
 				$this->Session->setFlash(__('The item could not be saved. Please, try again.', true));
 			}
@@ -48,7 +55,14 @@ class ItemsController extends AppController {
 			$this->data = $this->Item->read(null, $id);
 		}
 		$rooms = $this->Item->Room->find('list');
-		$categories = $this->Item->Category->find('list');
+
+		$category_tree = $this->Item->Category->generatetreelist(null,null,null," - ");
+		if ($category_tree) {
+			foreach ($category_tree as $key=>$value) {
+				$categories[$key] = $value;
+			}
+		}
+
 		$this->set(compact('rooms', 'categories'));
 	}
 
@@ -63,5 +77,33 @@ class ItemsController extends AppController {
 		}
 		$this->Session->setFlash(__('Item was not deleted', true));
 		$this->redirect(array('action' => 'index'));
+	}
+	
+	function search() {
+		$this->Item->recursive = 0;
+		
+		if(isset($this->params['url']['search'])) {
+			$search = $this->params['url']['search'];
+		} else {
+			$search = null;
+		}
+		
+		if(isset($this->passedArgs['function'])) {
+			$search = array('Item.function LIKE' => "%{$this->passedArgs['function']}%");
+		} elseif(isset($this->passedArgs['manufacturer'])) {
+			$search = array('Item.manufacturer LIKE' => "%{$this->passedArgs['manufacturer']}%");
+		} elseif(isset($this->passedArgs['name'])) {
+			$search = array('Item.name LIKE' => "%{$this->passedArgs['name']}%");
+		} elseif($search) {
+			$search = array('OR' => array(
+				'Item.function LIKE' => "%{$search}%",
+				'Item.manufacturer LIKE' => "%{$search}%",
+				'Item.name LIKE' => "%{$search}%"
+			));
+		}
+		
+		if($search) {
+			$this->set('items', $this->paginate('Item', $search));
+		}
 	}
 }

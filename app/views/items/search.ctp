@@ -1,5 +1,6 @@
-<div class="items index">
-	<h2><?php __('Items');?></h2>
+<div class="items search">
+<h2><?php __('Search');?></h2>
+<?php if(!empty($items)): ?>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('name');?></th>
@@ -40,4 +41,6 @@
  |
 		<?php echo $this->Paginator->next(__('next', true) . ' >>', array(), null, array('class' => 'disabled'));?>
 	</div>
+<?php endif; ?>
 </div>
+

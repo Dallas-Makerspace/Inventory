@@ -32,7 +32,6 @@ class Verification extends AppModel {
 			'foreignKey' => 'item_id',
 			'conditions' => '',
 			'fields' => '',
-			'order' => ''
 		)
 	);
 }

@@ -1,5 +1,5 @@
 <div class="rooms view">
-<h2><?php echo $room['Room']['name'] ?> Room</h2>
+<h2><?php echo h($room['Room']['name']) ?> Room</h2>
 </div>
 <div class="related">
 	<?php if (!empty($room['Item'])):?>
@@ -23,7 +23,7 @@
 			<td><?php echo $this->Html->link($item['name'], array('controller' => 'items', 'action' => 'view', $item['id'])); ?></td>
 			<td><?php echo $this->Html->link($item['function'], array('controller' => 'items', 'action' => 'search', 'function' => $item['function'])); ?></td>
 			<td><?php echo $this->Html->link($item['manufacturer'], array('controller' => 'items', 'action' => 'search', 'manufacturer' => $item['manufacturer'])); ?></td>
-			<td><?php echo $item['location'];?></td>
+			<td><?php echo h($item['location']);?></td>
 			<td><?php echo $item['qty'];?></td>
 		</tr>
 	<?php endforeach; ?>

@@ -1,5 +1,5 @@
 <div class="categories form">
-<h2>Delete Category: <?php echo $this->data['Category']['name']; ?></h2>
+<h2>Delete Category: <?php echo h($this->data['Category']['name']); ?></h2>
 <?php echo $this->Form->create('Category');?>
 	<?php
 		echo $this->Form->hidden('id');

@@ -1,6 +1,9 @@
 Beta:
-*Add/enable the Security Component
+*UPLOADS
+*Nicer flash messages
+*Nicer looking buttons
 *Add logging support
 *Add pagination of items to categories/view
+*Add pagination of items to rooms/view
 Stable:
 *Add revision history

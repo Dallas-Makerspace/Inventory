@@ -45,7 +45,7 @@ foreach($path as $parent) {
 			<td><?php echo $this->Html->link($item['function'], array('controller' => 'items', 'action' => 'search', 'function' => $item['function'])); ?></td>
 			<td><?php echo $this->Html->link($item['manufacturer'], array('controller' => 'items', 'action' => 'search', 'manufacturer' => $item['manufacturer'])); ?></td>
 			<td><?php echo $this->Html->link($item['Room']['name'],array('controller'=>'rooms','action'=>'view',$item['Room']['id']));?></td>
-			<td><?php echo $item['location'];?></td>
+			<td><?php echo h($item['location']);?></td>
 			<td><?php echo $item['qty'];?></td>
 		</tr>
 	<?php endforeach; ?>
