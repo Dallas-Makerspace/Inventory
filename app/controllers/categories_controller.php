@@ -91,8 +91,7 @@ class CategoriesController extends AppController {
 				$parents[$key] = $value;
 			}
 		}
-		$items = $this->Category->Item->find('list');
-		$this->set(compact('items','parents'));
+		$this->set(compact('parents'));
 	}
 
 	function edit($id = null) {
@@ -119,22 +118,52 @@ class CategoriesController extends AppController {
 				$parents[$key] = $value;
 			}
 		}
-		$items = $this->Category->Item->find('list');
-		$this->set(compact('items','parents'));
+		$this->set(compact('parents'));
 	}
 
 	function delete($id = null) {
-/*
-		if (!$id) {
+		if (!empty($this->data)) {
+			//time to delete stuff
+			$deleted = false;
+			switch($this->data['Category']['option']) {
+				//case 'all':
+					//Delete category, all child categories and all associated items
+					//if ($this->Category->delete($id,true)) {
+					//	$deleted = true;
+					//}
+					//break;
+				case 'children':
+					//Delete category and all child categories, leaving all items
+					if ($this->Category->delete($id)) {
+						$deleted = true;
+					}
+					break;
+				//case 'items':
+					//Delete category and all associated items, leaving child categories and their items
+					//TODO: Investigate if there is an easy way to do this
+					//break;
+				case 'only':
+					//Delete just this category, leaving all items and child categories
+					if ($this->Category->removeFromTree($id,true)) {
+						$deleted = true;
+					}
+					break;
+			}
+			if($deleted) {
+				$this->Session->setFlash(__('Category deleted', true));
+				$this->redirect(array('action'=>'index'));
+			} else {
+				$this->Session->setFlash(__('Category was not deleted', true));
+				$this->redirect(array('action' => 'index'));
+			}
+		} else {
+			$this->Category->recursive = 0;
+			$this->data = $this->Category->read(null, $id);
+		}
+		
+		if (empty($this->data['Category'])) {
 			$this->Session->setFlash(__('Invalid id for category', true));
 			$this->redirect(array('action'=>'index'));
 		}
-		if ($this->Category->delete($id)) {
-			$this->Session->setFlash(__('Category deleted', true));
-			$this->redirect(array('action'=>'index'));
-		}
-		$this->Session->setFlash(__('Category was not deleted', true));
-		$this->redirect(array('action' => 'index'));
-*/
 	}
 }
