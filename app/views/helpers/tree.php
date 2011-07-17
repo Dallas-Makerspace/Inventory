@@ -66,10 +66,9 @@ class TreeHelper extends Helper
 
 	// this handles the formatting of the links if there necessary
 	function style_print_item($item, $modelName, $style='') {
-		switch ($style)
-		{
+		switch ($style) {
 			case "link":
-				$output = $this->Html->link($item['name'], "view/".$item['id']);
+				$output = $this->Html->link($item['name'], "view/".$item['id'])." ({$item['item_count']})";
 			break;
 
 			case "admin":

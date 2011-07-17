@@ -1,4 +1,6 @@
 Beta:
-* Show item_count on category list
-Stable:
 *Add/enable the Security Component
+*Add logging support
+*Add pagination of items to categories/view
+Stable:
+*Add revision history

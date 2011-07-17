@@ -5,7 +5,16 @@ class CategoriesController extends AppController {
 
 	function index() {
 		// Generate a listing of all top level categories
-		$categories = $this->Category->generatetreelist(array('parent_id'=>0));
+		$this->Category->recursive = 0;
+		$categories = $this->Category->findAllByParentId(0);
+		
+		foreach($categories as &$category) {
+			$category['Category']['category_count'] = $this->Category->childCount($category['Category']['id']);
+			$children = $this->Category->children($category['Category']['id']);
+			foreach($children as $child) {
+				$category['Category']['item_count'] += $child['Category']['item_count'];
+			}
+		}
 		$this->set(compact('categories'));
 	}
 
@@ -15,6 +24,14 @@ class CategoriesController extends AppController {
 		$this->Category->recursive = 0;
 		$categories = $this->Category->find('threaded');
 		$this->set(compact('categories'));
+	}
+	
+	function getAllCategories() {
+		if (!isset($this->params['requested'])) {
+			$this->cakeError('error404');
+		}
+		
+		return $this->Category->generatetreelist(null,null,null,' - ');
 	}
 
 	function view($id = null) {
@@ -46,6 +63,13 @@ class CategoriesController extends AppController {
 		// Get all direct child categories
 		$children = $this->Category->children($this->id,true);
 
+		foreach($children as &$child) {
+			$child['Category']['category_count'] = $this->Category->childCount($child['Category']['id']);
+			$grandchildren = $this->Category->children($child['Category']['id']);
+			foreach($grandchildren as $grandchild) {
+				$child['Category']['item_count'] += $grandchild['Category']['item_count'];
+			}
+		}
 		$this->set(compact('category','children','path'));
 	}
 

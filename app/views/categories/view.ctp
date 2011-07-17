@@ -1,46 +1,27 @@
 <div class="categories view">
-<h2><?php  __('Category');?></h2>
-	<dl><?php $i = 0; $class = ' class="altrow"';?>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Path'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php
-			//echo '/'.$this->Html->link("[Root]",array('action'=>'index'));
-			foreach($path as $parent) {
-				//echo "&nbsp;-&gt;&nbsp;";
-				echo '/'.$this->Html->link($parent['Category']['name'],array('action'=>'view',$parent['Category']['id']));
-			} ?>
-		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Name'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $category['Category']['name']; ?>
-			&nbsp;
-		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Items'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $category['Category']['item_count']; ?>
-			&nbsp;
-		</dd>
-	</dl>
-	<h3>Child Categories</h3>
+<h2>
+<?php
+	echo $this->Html->link(__('Categories',true),array('action'=>'index')).': ';
+foreach($path as $parent) {
+	echo '/'.$this->Html->link($parent['Category']['name'],array('action'=>'view',$parent['Category']['id']));
+}
+?>
+</h2>
+<?php if(!empty($children)): ?>
 	<ul>
 		<?php foreach($children as $child): ?>
-		<li><?php echo $this->Html->link($child['Category']['name'],array('action'=>'view',$child['Category']['id'])); ?></li>
+		<li>
+		<?php
+			echo $this->Html->link("{$child['Category']['name']}",array('action'=>'view',$child['Category']['id']));
+			echo " [{$child['Category']['category_count']}] ({$child['Category']['item_count']})";
+		?>
+		</li>
 		<?php endforeach; ?>
 	</ul>
-</div>
-<div class="actions">
-	<h3><?php __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Category', true), array('action' => 'edit', $category['Category']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Delete Category', true), array('action' => 'delete', $category['Category']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $category['Category']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Categories', true), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Category', true), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Items', true), array('controller' => 'items', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Item', true), array('controller' => 'items', 'action' => 'add')); ?> </li>
-	</ul>
+<?php endif; ?>
 </div>
 <div class="related">
-	<h3><?php __('Related Items');?></h3>
+	<h3><?php __('Items');?> (<?php echo $category['Category']['item_count']; ?>)</h3>
 	<?php if (!empty($category['Item'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
@@ -69,11 +50,15 @@
 		</tr>
 	<?php endforeach; ?>
 	</table>
-<?php endif; ?>
-
-	<div class="actions">
-		<ul>
-			<li><?php echo $this->Html->link(__('New Item', true), array('controller' => 'items', 'action' => 'add'));?> </li>
-		</ul>
-	</div>
+	<?php else: ?>
+	<p>There are no items in this category.</p>
+	<?php endif; ?>
 </div>
+
+<?php
+$page_actions = array(
+	$this->Html->link(__('Edit Category', true), array('action' => 'edit', $category['Category']['id'])),
+	$this->Html->link(__('Delete Category', true), array('action' => 'delete', $category['Category']['id'])),
+);
+$this->set(compact('page_actions'));
+?>
