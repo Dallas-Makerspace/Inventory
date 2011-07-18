@@ -2,6 +2,7 @@
 class Comment extends AppModel {
 	var $name = 'Comment';
 	var $displayField = 'username';
+	var $actsAs = array('Logable' => array('change' => 'full'));
 	var $validate = array(
 		'message' => array(
 			'notempty' => array(

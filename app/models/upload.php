@@ -2,6 +2,7 @@
 class Upload extends AppModel {
 	var $name = 'Upload';
 	var $displayField = 'name';
+	var $actsAs = array('Logable' => array('change' => 'full'));
 	var $validate = array(
 		'name' => array(
 			'notempty' => array(

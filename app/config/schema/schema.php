@@ -14,8 +14,7 @@ class AppSchema extends CakeSchema {
 		'id' => array('type' => 'string', 'null' => false, 'key' => 'primary'),
 		'data' => array('type' => 'text', 'null' => true, 'default' => NULL),
 		'expires' => array('type' => 'integer', 'null' => true, 'default' => NULL),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
-		'tableParameters' => array('engine' => 'MyISAM')
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
 	);
 	var $categories = array(
 		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
@@ -24,8 +23,7 @@ class AppSchema extends CakeSchema {
 		'lft' => array('type' => 'integer', 'null' => false),
 		'rght' => array('type' => 'integer', 'null' => false),
 		'item_count' => array('type' => 'integer', 'null' => true, 'default' => NULL, 'length' => 5),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
-		'tableParameters' => array('engine' => 'MyISAM')
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
 	);
 	var $comments = array(
 		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
@@ -33,8 +31,7 @@ class AppSchema extends CakeSchema {
 		'created' => array('type' => 'datetime', 'null' => false),
 		'username' => array('type' => 'string', 'null' => false),
 		'message' => array('type' => 'text', 'null' => false),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
-		'tableParameters' => array('engine' => 'MyISAM')
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
 	);
 	var $items = array(
 		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
@@ -48,21 +45,31 @@ class AppSchema extends CakeSchema {
 		'owner' => array('type' => 'string', 'null' => false),
 		'qty' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 5),
 		'notes' => array('type' => 'text', 'null' => true, 'default' => NULL),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
-		'tableParameters' => array('engine' => 'MyISAM')
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
 	);
 	var $items_categories = array(
 		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
 		'item_id' => array('type' => 'integer', 'null' => false),
 		'category_id' => array('type' => 'integer', 'null' => false),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
-		'tableParameters' => array('engine' => 'MyISAM')
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
+	);
+	var $logs = array(
+		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
+		'title' => array('type' => 'string', 'null' => false),
+		'created' => array('type' => 'datetime', 'null' => false),
+		'model' => array('type' => 'string', 'null' => false),
+		'model_id' => array('type' => 'integer', 'null' => false),
+		'action' => array('type' => 'string', 'null' => false),
+		'description' => array('type' => 'string', 'null' => false),
+		'username' => array('type' => 'string', 'null' => false),
+		'change' => array('type' => 'string', 'null' => false),
+		'version_id' => array('type' => 'integer', 'null' => false),
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
 	);
 	var $rooms = array(
 		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
 		'name' => array('type' => 'string', 'null' => false),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
-		'tableParameters' => array('engine' => 'MyISAM')
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
 	);
 	var $uploads = array(
 		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
@@ -72,8 +79,7 @@ class AppSchema extends CakeSchema {
 		'type' => array('type' => 'string', 'null' => false),
 		'size' => array('type' => 'integer', 'null' => false),
 		'created' => array('type' => 'datetime', 'null' => false),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'name' => array('column' => 'name', 'unique' => 1)),
-		'tableParameters' => array('engine' => 'MyISAM')
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'name' => array('column' => 'name', 'unique' => 1))
 	);
 	var $verifications = array(
 		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
@@ -81,8 +87,7 @@ class AppSchema extends CakeSchema {
 		'created' => array('type' => 'datetime', 'null' => false),
 		'username' => array('type' => 'string', 'null' => false),
 		'comment' => array('type' => 'text', 'null' => true, 'default' => NULL),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
-		'tableParameters' => array('engine' => 'MyISAM')
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
 	);
 }
 ?>

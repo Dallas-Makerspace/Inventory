@@ -2,7 +2,7 @@
 class Category extends AppModel {
 	var $name = 'Category';
 	var $displayField = 'name';
-	var $actsAs = array('Tree','CounterCacheHabtm');
+	var $actsAs = array('Tree','CounterCacheHabtm','Logable' => array('change' => 'full'));
 	var $validate = array(
 		'name' => array(
 			'notempty' => array(

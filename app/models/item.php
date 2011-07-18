@@ -2,7 +2,7 @@
 class Item extends AppModel {
 	var $name = 'Item';
 	var $displayField = 'name';
-	var $actsAs = array('CounterCacheHabtm');
+	var $actsAs = array('CounterCacheHabtm','Logable' => array('change' => 'full'));
 	var $validate = array(
 		'name' => array(
 			'notempty' => array(

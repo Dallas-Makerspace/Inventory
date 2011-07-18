@@ -2,7 +2,6 @@ Beta:
 *Nicer flash messages
 *Nicer looking buttons
 *Visual indicator of form errors
-*Add logging support
 *Add pagination of items to categories/view
 *Add pagination of items to rooms/view
 *Room printouts with QR codes
@@ -11,3 +10,4 @@ Stable:
 *CSV export system
 *Thumbnails for uploaded files
 *AJAXify things like adding comments, files, verifications, etc
+*Front-end interface to view logs

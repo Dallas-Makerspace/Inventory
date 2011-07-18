@@ -2,6 +2,7 @@
 class Verification extends AppModel {
 	var $name = 'Verification';
 	var $displayField = 'username';
+	var $actsAs = array('Logable' => array('change' => 'full'));
 	var $validate = array(
 		'item_id' => array(
 			'numeric' => array(

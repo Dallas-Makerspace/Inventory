@@ -15,6 +15,10 @@ class AppController extends Controller {
 	function beforeFilter(){
 		if(!empty($this->data)) array_walk_recursive($this->data, array($this, 'whitespace'));
 		$this->set('uid',$this->LdapAuth->user('uid'));
+
+		if (sizeof($this->uses) && $this->{$this->modelClass}->Behaviors->attached('Logable')) {
+			$this->{$this->modelClass}->setUserData($this->LdapAuth->user('uid'));
+		}
 	}
 
 }

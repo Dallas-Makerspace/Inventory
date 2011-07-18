@@ -2,6 +2,7 @@
 class Room extends AppModel {
 	var $name = 'Room';
 	var $displayField = 'name';
+	var $actsAs = array('Logable' => array('change' => 'full'));
 	var $validate = array(
 		'name' => array(
 			'notempty' => array(
