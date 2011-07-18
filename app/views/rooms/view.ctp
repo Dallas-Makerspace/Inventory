@@ -23,7 +23,7 @@
 			<td><?php echo $this->Html->link($item['name'], array('controller' => 'items', 'action' => 'view', $item['id'])); ?></td>
 			<td><?php echo $this->Html->link($item['function'], array('controller' => 'items', 'action' => 'search', 'function' => $item['function'])); ?></td>
 			<td><?php echo $this->Html->link($item['manufacturer'], array('controller' => 'items', 'action' => 'search', 'manufacturer' => $item['manufacturer'])); ?></td>
-			<td><?php echo h($item['location']);?></td>
+			<td><?php echo $this->Html->link($item['location'], array('controller' => 'items', 'action' => 'search', 'location' => $item['location'])); ?></td>
 			<td><?php echo $item['qty'];?></td>
 		</tr>
 	<?php endforeach; ?>

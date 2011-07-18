@@ -99,12 +99,15 @@ class ItemsController extends AppController {
 			$search = array('Item.name LIKE' => "%{$this->passedArgs['name']}%");
 		} elseif(isset($this->passedArgs['location'])) {
 			$search = array('Item.location LIKE' => "%{$this->passedArgs['location']}%");
+		} elseif(isset($this->passedArgs['owner'])) {
+			$search = array('Item.owner LIKE' => "%{$this->passedArgs['owner']}%");
 		} elseif($search) {
 			$search = array('OR' => array(
 				'Item.function LIKE' => "%{$search}%",
 				'Item.manufacturer LIKE' => "%{$search}%",
 				'Item.name LIKE' => "%{$search}%",
 				'Item.location LIKE' => "%{$search}%",
+				'Item.owner LIKE' => "%{$search}%",
 			));
 		}
 		

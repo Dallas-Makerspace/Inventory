@@ -58,7 +58,7 @@
 <?php if(isset($uid)): ?>
 <div id="sidebar">
 	<?php echo $this->element('navigation', array('cache' => true)); ?>
-	<?php echo $this->element('actions', array('cache' => true)); ?>
+	<?php echo $this->element('actions'); ?>
 </div>
 <?php endif; ?>
 
