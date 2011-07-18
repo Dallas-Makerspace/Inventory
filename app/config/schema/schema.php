@@ -11,75 +11,75 @@ class AppSchema extends CakeSchema {
 	}
 
 	var $cake_sessions = array(
-		'id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'key' => 'primary'),
+		'id' => array('type' => 'string', 'null' => false, 'key' => 'primary'),
 		'data' => array('type' => 'text', 'null' => true, 'default' => NULL),
 		'expires' => array('type' => 'integer', 'null' => true, 'default' => NULL),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('engine' => 'MyISAM')
 	);
 	var $categories = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
-		'parent_id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
-		'name' => array('type' => 'string', 'null' => false, 'default' => NULL),
-		'lft' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
-		'rght' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
+		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
+		'parent_id' => array('type' => 'integer', 'null' => false),
+		'name' => array('type' => 'string', 'null' => false),
+		'lft' => array('type' => 'integer', 'null' => false),
+		'rght' => array('type' => 'integer', 'null' => false),
 		'item_count' => array('type' => 'integer', 'null' => true, 'default' => NULL, 'length' => 5),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('engine' => 'MyISAM')
 	);
 	var $comments = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
-		'item_id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
-		'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
-		'username' => array('type' => 'string', 'null' => false, 'default' => NULL),
-		'message' => array('type' => 'text', 'null' => false, 'default' => NULL),
+		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
+		'item_id' => array('type' => 'integer', 'null' => false),
+		'created' => array('type' => 'datetime', 'null' => false),
+		'username' => array('type' => 'string', 'null' => false),
+		'message' => array('type' => 'text', 'null' => false),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('engine' => 'MyISAM')
 	);
 	var $items = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
-		'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
-		'modified' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
-		'name' => array('type' => 'string', 'null' => false, 'default' => NULL),
+		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
+		'created' => array('type' => 'datetime', 'null' => false),
+		'modified' => array('type' => 'datetime', 'null' => false),
+		'name' => array('type' => 'string', 'null' => false),
 		'function' => array('type' => 'string', 'null' => true, 'default' => NULL),
 		'manufacturer' => array('type' => 'string', 'null' => true, 'default' => NULL),
-		'room_id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
-		'location' => array('type' => 'string', 'null' => false, 'default' => NULL),
-		'owner' => array('type' => 'string', 'null' => false, 'default' => NULL),
+		'room_id' => array('type' => 'integer', 'null' => false),
+		'location' => array('type' => 'string', 'null' => false),
+		'owner' => array('type' => 'string', 'null' => false),
 		'qty' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 5),
 		'notes' => array('type' => 'text', 'null' => true, 'default' => NULL),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('engine' => 'MyISAM')
 	);
 	var $items_categories = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
-		'item_id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
-		'category_id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
+		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
+		'item_id' => array('type' => 'integer', 'null' => false),
+		'category_id' => array('type' => 'integer', 'null' => false),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('engine' => 'MyISAM')
 	);
 	var $rooms = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
-		'name' => array('type' => 'string', 'null' => false, 'default' => NULL),
+		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
+		'name' => array('type' => 'string', 'null' => false),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('engine' => 'MyISAM')
 	);
 	var $uploads = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
-		'item_id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
-		'name' => array('type' => 'string', 'null' => false, 'default' => NULL, 'key' => 'unique'),
+		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
+		'item_id' => array('type' => 'integer', 'null' => false),
+		'name' => array('type' => 'string', 'null' => false, 'key' => 'unique'),
 		'description' => array('type' => 'string', 'null' => true, 'default' => NULL),
-		'type' => array('type' => 'string', 'null' => false, 'default' => NULL),
-		'size' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
-		'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
+		'type' => array('type' => 'string', 'null' => false),
+		'size' => array('type' => 'integer', 'null' => false),
+		'created' => array('type' => 'datetime', 'null' => false),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'name' => array('column' => 'name', 'unique' => 1)),
 		'tableParameters' => array('engine' => 'MyISAM')
 	);
 	var $verifications = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
-		'item_id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
-		'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
-		'username' => array('type' => 'string', 'null' => false, 'default' => NULL),
+		'id' => array('type' => 'integer', 'null' => false, 'key' => 'primary'),
+		'item_id' => array('type' => 'integer', 'null' => false),
+		'created' => array('type' => 'datetime', 'null' => false),
+		'username' => array('type' => 'string', 'null' => false),
 		'comment' => array('type' => 'text', 'null' => true, 'default' => NULL),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('engine' => 'MyISAM')
