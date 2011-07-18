@@ -11,6 +11,7 @@
 	echo $this->Html->css('straightblack') . "\n";
 	echo $this->Html->css('cake.modified') . "\n";
 	echo $this->Html->css('css3buttons') . "\n";
+	echo $this->Html->css('straightblack-print','stylesheet',array('media' => 'print')) . "\n";
 	echo $scripts_for_layout;
 ?>
 
@@ -47,6 +48,11 @@
 
 <?php echo $content_for_layout; ?>
 
+<div class="printonly">
+<h3>QR code for this page:</h3>
+<?php echo $this->Qrcode->url($this->Html->url(null,true),array('size' => '150x150','margin' => 0)); ?>
+</div>
+
 </div>
 
 <?php if(isset($uid)): ?>
@@ -65,6 +71,8 @@
 </div>
 
 </div>
-<?php echo $this->element('sql_dump'); ?>
+<div class="debug">
+	<?php echo $this->element('sql_dump'); ?>
+</div>
 </body>
 </html>

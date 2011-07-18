@@ -8,6 +8,7 @@
 			<th><?php echo $this->Paginator->sort('manufacturer');?></th>
 			<th><?php echo $this->Paginator->sort('room_id');?></th>
 			<th><?php echo $this->Paginator->sort('location');?></th>
+			<th><?php echo $this->Paginator->sort('owner');?></th>
 			<th><?php echo $this->Paginator->sort('qty');?></th>
 	</tr>
 	<?php
@@ -23,7 +24,8 @@
 		<td><?php echo $this->Html->link($item['Item']['function'], array('controller' => 'items', 'action' => 'search', 'function' => $item['Item']['function'])); ?></td>
 		<td><?php echo $this->Html->link($item['Item']['manufacturer'], array('controller' => 'items', 'action' => 'search', 'manufacturer' => $item['Item']['manufacturer'])); ?></td>
 		<td><?php echo $this->Html->link($item['Room']['name'], array('controller' => 'rooms', 'action' => 'view', $item['Room']['id'])); ?></td>
-		<td><?php echo h($item['Item']['location']); ?></td>
+		<td><?php echo $this->Html->link($item['Item']['location'], array('controller' => 'items', 'action' => 'search', 'location' => $item['Item']['location'])); ?></td>
+		<td><?php echo $this->Html->link($item['Item']['owner'], array('controller' => 'items', 'action' => 'search', 'owner' => $item['Item']['owner'])); ?></td>
 		<td><?php echo $item['Item']['qty']; ?></td>
 	</tr>
 <?php endforeach; ?>

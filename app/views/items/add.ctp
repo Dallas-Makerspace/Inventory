@@ -8,7 +8,8 @@
 		echo $this->Form->input('manufacturer');
 		echo $this->Form->input('room_id');
 		echo $this->Form->input('location');
-		echo $this->Form->input('qty');
+		echo $this->Form->input('owner',array('default' => 'DMS'));
+		echo $this->Form->input('qty',array('label' => 'Quantity'));
 		echo $this->Form->input('notes');
 		echo $this->Form->input('Category');
 	?>

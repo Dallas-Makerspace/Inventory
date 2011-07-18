@@ -1,5 +1,11 @@
 <div class="items view">
 <h2>Item: <?php echo h($item['Item']['name']); ?></h2>
+<div style="float:right">
+Item:<br />
+<?php echo $this->Qrcode->url($this->Html->url(null,true),array('size' => '150x150','margin' => 0)); ?><br />
+Location:<br />
+<?php echo $this->Qrcode->url($this->Html->url(array('action' => 'search', 'location' => $item['Item']['location']),true),array('size' => '150x150','margin' => 0)); ?><br />
+</div>
 	<dl><?php $i = 0; $class = ' class="altrow"';?>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Function'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
@@ -19,6 +25,11 @@
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Location'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
 			<?php echo $this->Html->link($item['Item']['location'],array('action' => 'search', 'location' => $item['Item']['location'])); ?>
+			&nbsp;
+		</dd>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Owner'); ?></dt>
+		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
+			<?php echo $this->Html->link($item['Item']['owner'],array('action' => 'search', 'owner' => $item['Item']['owner'])); ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Qty'); ?></dt>
@@ -83,7 +94,7 @@
 		<th><?php __('Name'); ?></th>
 		<th><?php __('Size'); ?></th>
 		<th><?php __('Description'); ?></th>
-		<th><?php __('Actions'); ?></th>
+		<th class="noprint"><?php __('Actions'); ?></th>
 	</tr>
 	<?php
 		$i = 0;
@@ -98,11 +109,13 @@
 			<td><?php echo $this->Number->toReadableSize($upload['size']); ?></td>
 			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink(h($upload['description'])));?></td>
 			<!-- <a href="#" class="negative button"><span class="trash icon"></span>Delete</a> -->
-			<td><?php echo $this->Html->link(__('Delete', true),array('controller' => 'uploads', 'action' => 'delete', $upload['id']), null, sprintf(__('Are you sure you want to delete %s?', true), $upload['name'])); ?></td>
+			<td class="noprint"><?php echo $this->Html->link(__('Delete', true),array('controller' => 'uploads', 'action' => 'delete', $upload['id']), null, sprintf(__('Are you sure you want to delete %s?', true), $upload['name'])); ?></td>
 		</tr>
 	<?php endforeach; ?>
 	</table>
-<?php endif; ?>
+	<?php else: ?>
+	<p>No files have been uploaded for this item.</p>
+	<?php endif; ?>
 </div>
 
 <div class="related">
@@ -134,7 +147,9 @@
 		</tr>
 	<?php endforeach; ?>
 	</table>
-<?php endif; ?>
+	<?php else: ?>
+	<p>No comments have been made on this item.</p>
+	<?php endif; ?>
 </div>
 
 <div class="related">
@@ -167,7 +182,9 @@
 		</tr>
 	<?php endforeach; ?>
 	</table>
-<?php endif; ?>
+	<?php else: ?>
+	<p>No inventory verifications have been done for this item.</p>
+	<?php endif; ?>
 </div>
 
 <?php

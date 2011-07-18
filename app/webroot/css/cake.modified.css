@@ -1,3 +1,8 @@
+/** Print **/
+.printonly {
+	display: none;
+}
+
 /** Tables **/
 table {
 	background: #fff;
