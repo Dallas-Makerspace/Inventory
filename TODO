@@ -5,6 +5,11 @@ Beta:
 *Add pagination of items to categories/view
 *Add pagination of items to rooms/view
 *Room printouts with QR codes
+*Tooltips or help page to explain fields
+*Advanced search
+*Possibly add the following fields to items:
+**value (e.g. for 22pF capacitor value would equal 22)
+**uom_id (create a new unit of meassure table, I'll need to figure out a good way to relate various units)
 Stable:
 *Add revision history
 *CSV export system

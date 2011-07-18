@@ -9,7 +9,18 @@ Location:<br />
 	<dl><?php $i = 0; $class = ' class="altrow"';?>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Function'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $this->Html->link($item['Item']['function'],array('action' => 'search', 'function' => $item['Item']['function'])); ?>
+			<?php
+			$functions = explode(',',$item['Item']['function']);
+			$first = true;
+			foreach($functions as $function) {
+				if($first) {
+					$first = false;
+				} else {
+					echo ', ';
+				}
+				echo $this->Html->link($function, array('controller' => 'items', 'action' => 'search', 'function' => trim($function)));
+			}
+			?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Manufacturer'); ?></dt>

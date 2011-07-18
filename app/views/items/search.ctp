@@ -21,7 +21,20 @@
 	?>
 	<tr<?php echo $class;?>>
 		<td><?php echo $this->Html->link($item['Item']['name'], array('controller' => 'items', 'action' => 'view', $item['Item']['id'])); ?></td>
-		<td><?php echo $this->Html->link($item['Item']['function'], array('controller' => 'items', 'action' => 'search', 'function' => $item['Item']['function'])); ?></td>
+		<td>
+			<?php
+			$functions = explode(',',$item['Item']['function']);
+			$first = true;
+			foreach($functions as $function) {
+				if($first) {
+					$first = false;
+				} else {
+					echo ', ';
+				}
+				echo $this->Html->link($function, array('controller' => 'items', 'action' => 'search', 'function' => trim($function)));
+			}
+			?>
+		</td>
 		<td><?php echo $this->Html->link($item['Item']['manufacturer'], array('controller' => 'items', 'action' => 'search', 'manufacturer' => $item['Item']['manufacturer'])); ?></td>
 		<td><?php echo $this->Html->link($item['Room']['name'], array('controller' => 'rooms', 'action' => 'view', $item['Room']['id'])); ?></td>
 		<td><?php echo $this->Html->link($item['Item']['location'], array('controller' => 'items', 'action' => 'search', 'location' => $item['Item']['location'])); ?></td>
