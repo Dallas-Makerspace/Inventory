@@ -12,7 +12,7 @@ class VerificationsController extends AppController {
 			$this->Verification->create();
 			$this->data['Verification']['username'] = $this->LdapAuth->user('uid');
 			if ($this->Verification->save($this->data)) {
-				$this->Session->setFlash(__('The verification has been saved', true));
+				$this->Session->setFlash(__('The verification has been saved', true),'default',array('class' => 'success-message'));
 				$this->redirect(array('controller' => 'items', 'action' => 'view', $this->data['Verification']['item_id']));
 			} else {
 				$this->Session->setFlash(__('The verification could not be saved. Please, try again.', true));

@@ -81,7 +81,7 @@ class CategoriesController extends AppController {
 		if (!empty($this->data)) {
 			$this->Category->create();
 			if ($this->Category->save($this->data)) {
-				$this->Session->setFlash(__('The category has been added', true));
+				$this->Session->setFlash(__('The category has been added', true),'default',array('class' => 'success-message'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The category could not be saved. Please, try again.', true));
@@ -105,7 +105,7 @@ class CategoriesController extends AppController {
 		}
 		if (!empty($this->data)) {
 			if ($this->Category->save($this->data)) {
-				$this->Session->setFlash(__('The category has been saved', true));
+				$this->Session->setFlash(__('The category has been saved', true),'default',array('class' => 'success-message'));
 				$this->redirect(array('action' => 'view', $this->data['Category']['id']));
 			} else {
 				$this->Session->setFlash(__('The category could not be saved. Please, try again.', true));

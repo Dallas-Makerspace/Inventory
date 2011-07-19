@@ -8,7 +8,11 @@
 		echo $this->Form->input('name');
 	?>
 	</fieldset>
-<?php echo $this->Form->end(__('Submit', true));?>
+<?php
+	echo $this->Form->button(__('Submit', true), array('type'=>'submit','class'=>'primary left'));
+	echo $this->Html->link(__('Cancel', true), array('action' => 'view', $this->data['Category']['id']), array('class' => 'button negative right'));
+	echo $this->Form->end();
+?>
 </div>
 
 <?php

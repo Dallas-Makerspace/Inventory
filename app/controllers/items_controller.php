@@ -20,7 +20,7 @@ class ItemsController extends AppController {
 		if (!empty($this->data)) {
 			$this->Item->create();
 			if ($this->Item->save($this->data)) {
-				$this->Session->setFlash(__('The item has been saved', true));
+				$this->Session->setFlash(__('The item has been saved', true),'default',array('class' => 'success-message'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The item could not be saved. Please, try again.', true));
@@ -45,7 +45,7 @@ class ItemsController extends AppController {
 		}
 		if (!empty($this->data)) {
 			if ($this->Item->save($this->data)) {
-				$this->Session->setFlash(__('The item has been saved', true));
+				$this->Session->setFlash(__('The item has been saved', true),'default',array('class' => 'success-message'));
 				$this->redirect(array('action' => 'view', $this->data['Item']['id']));
 			} else {
 				$this->Session->setFlash(__('The item could not be saved. Please, try again.', true));

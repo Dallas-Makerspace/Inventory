@@ -173,6 +173,11 @@ input[type=radio] {
 div.radio label {
 	margin: 0 0 6px 20px;
 }
+
+div.error {
+	background: #CCC;
+}
+
 /*
 input[type=submit], button {
 	display: inline;

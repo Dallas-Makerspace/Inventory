@@ -12,7 +12,7 @@ class CommentsController extends AppController {
 			$this->Comment->create();
 			$this->data['Comment']['username'] = $this->LdapAuth->user('uid');
 			if ($this->Comment->save($this->data)) {
-				$this->Session->setFlash(__('The comment has been saved', true));
+				$this->Session->setFlash(__('The comment has been saved', true),'default',array('class' => 'success-message'));
 				$this->redirect(array('controller' => 'items', 'action' => 'view', $this->data['Comment']['item_id']));
 			} else {
 				$this->Session->setFlash(__('The comment could not be saved. Please, try again.', true));

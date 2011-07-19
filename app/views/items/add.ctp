@@ -14,5 +14,8 @@
 		echo $this->Form->input('Category');
 	?>
 	</fieldset>
-<?php echo $this->Form->end(__('Submit', true));?>
+<?php
+	echo $this->Form->button(__('Submit', true), array('type'=>'submit','class'=>'primary'));
+	echo $this->Form->end();
+?>
 </div>

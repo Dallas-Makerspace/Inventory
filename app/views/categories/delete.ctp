@@ -15,5 +15,9 @@
 		));
 	?>
 	<p><strong>NOTE: This operation can not be undone!</strong></p>
-<?php echo $this->Form->end(__('Delete', true));?>
+<?php
+	echo $this->Form->button(__('Delete', true), array('type'=>'submit','class'=>'negative left'));
+	echo $this->Html->link(__('Cancel', true), array('action' => 'view', $this->data['Category']['id']), array('class' => 'primary button right'));
+	echo $this->Form->end();
+?>
 </div>

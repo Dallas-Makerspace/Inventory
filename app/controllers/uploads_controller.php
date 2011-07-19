@@ -26,7 +26,7 @@ class UploadsController extends AppController {
 			$this->data['Upload']['size'] = $this->data['Upload']['file']['size'];
 			if ($this->Upload->save($this->data)) {
 				if(rename($this->data['Upload']['file']['tmp_name'],'files/'.$this->data['Upload']['name'])) {
-					$this->Session->setFlash(__('The file has been saved', true));
+					$this->Session->setFlash(__('The file has been saved', true),'default',array('class' => 'success-message'));
 					$this->redirect(array('controller' => 'items', 'action' => 'view', $this->data['Upload']['item_id']));
 				} else {
 					$this->Session->setFlash(__('The file has been added to the database but may not have been saved to disk.', true));

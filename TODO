@@ -1,7 +1,4 @@
 Beta:
-*Nicer flash messages
-*Nicer looking buttons
-*Visual indicator of form errors
 *Add pagination of items to categories/view
 *Add pagination of items to rooms/view
 *Room printouts with QR codes
@@ -16,3 +13,4 @@ Stable:
 *Thumbnails for uploaded files
 *AJAXify things like adding comments, files, verifications, etc
 *Front-end interface to view logs
+*Redesign to look nicer?
