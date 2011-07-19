@@ -1,4 +1,4 @@
-#sidebar, #menu, .actions, .noprint, .debug, #cakeSqlLog {
+#sidebar, #menu, .actions, .paging, .noprint, .debug, #cakeSqlLog {
 display: none;
 }
 
