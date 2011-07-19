@@ -82,38 +82,53 @@ class ItemsController extends AppController {
 	function search() {
 		if($this->data) {
 			// We are redirecting the POST request to a pretty looking URL
-			$this->redirect(array('all' => $this->data['Item']['search']));
+			$this->redirect(array('all' => str_replace(' ','+',$this->data['Item']['search'])));
 		}
 
 		if(isset($this->passedArgs['all'])) {
-			$search = $this->passedArgs['all'];
+			$search_terms = $this->passedArgs['all'];
 		} else {
-			$search = null;
+			$search_terms = null;
 		}
-		
+
 		if(isset($this->passedArgs['function'])) {
-			$search = array('Item.function LIKE' => "%{$this->passedArgs['function']}%");
+			foreach(explode(' ',$this->passedArgs['function']) as $string) {
+				$search['OR'][] = array('Item.function LIKE' => "%{$string}%");
+			}
 		} elseif(isset($this->passedArgs['manufacturer'])) {
-			$search = array('Item.manufacturer LIKE' => "%{$this->passedArgs['manufacturer']}%");
+			foreach(explode(' ',$this->passedArgs['manufacturer']) as $string) {
+				$search['OR'][] = array('Item.manufacturer LIKE' => "%{$string}%");
+			}
 		} elseif(isset($this->passedArgs['name'])) {
-			$search = array('Item.name LIKE' => "%{$this->passedArgs['name']}%");
+			foreach(explode(' ',$this->passedArgs['name']) as $string) {
+				$search['OR'][] = array('Item.name LIKE' => "%{$string}%");
+			}
 		} elseif(isset($this->passedArgs['location'])) {
-			$search = array('Item.location LIKE' => "%{$this->passedArgs['location']}%");
+			foreach(explode(' ',$this->passedArgs['location']) as $string) {
+				$search['OR'][] = array('Item.location LIKE' => "%{$string}%");
+			}
 		} elseif(isset($this->passedArgs['owner'])) {
-			$search = array('Item.owner LIKE' => "%{$this->passedArgs['owner']}%");
-		} elseif($search) {
-			$search = array('OR' => array(
-				'Item.function LIKE' => "%{$search}%",
-				'Item.manufacturer LIKE' => "%{$search}%",
-				'Item.name LIKE' => "%{$search}%",
-				'Item.location LIKE' => "%{$search}%",
-				'Item.owner LIKE' => "%{$search}%",
-			));
+			foreach(explode(' ',$this->passedArgs['owner']) as $string) {
+				$search['OR'][] = array('Item.owner LIKE' => "%{$string}%");
+			}
+		} elseif($search_terms) {
+			$search = array('OR' => array());
+			foreach(explode(' ',$search_terms) as $string) {
+				$search['OR'][] = array('Item.function LIKE' => "%{$string}%");
+				$search['OR'][] = array('Item.manufacturer LIKE' => "%{$string}%");
+				$search['OR'][] = array('Item.name LIKE' => "%{$string}%");
+				$search['OR'][] = array('Item.location LIKE' => "%{$string}%");
+				$search['OR'][] = array('Item.owner LIKE' => "%{$string}%");
+			}
 		}
 		
-		if($search) {
+		if($search_terms) {
 			$this->Item->recursive = 0;
-			$this->set('items', $this->paginate('Item', $search));
+			$items = $this->paginate('Item', $search);
+			if(count($items) == 1) {
+				$this->redirect(array('action'=>'view',$items[0]['Item']['id']));
+			}
+			$this->set(compact('items'));
 		}
 	}
 }
