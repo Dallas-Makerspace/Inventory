@@ -4,6 +4,9 @@ class UsersController extends AppController {
 	var $name = 'Users';    
 
 	function login() {
+		if ($this->LdapAuth->user()) {
+			$this->redirect(array('controller' => 'categories'));
+		}
 	}
 
 	function logout() {

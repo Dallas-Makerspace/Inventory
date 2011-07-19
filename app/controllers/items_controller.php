@@ -128,7 +128,8 @@ class ItemsController extends AppController {
 			if(count($items) == 1) {
 				$this->redirect(array('action'=>'view',$items[0]['Item']['id']));
 			}
-			$this->set(compact('items'));
 		}
+
+		$this->set(compact('search_terms','items'));
 	}
 }
