@@ -91,6 +91,8 @@ class ItemsController extends AppController {
 			$search_terms = null;
 		}
 
+		$search = false;
+
 		if(isset($this->passedArgs['function'])) {
 			foreach(explode(' ',$this->passedArgs['function']) as $string) {
 				$search['OR'][] = array('Item.function LIKE' => "%{$string}%");
@@ -122,7 +124,7 @@ class ItemsController extends AppController {
 			}
 		}
 		
-		if($search_terms) {
+		if($search) {
 			$this->Item->recursive = 0;
 			$items = $this->paginate('Item', $search);
 			if(count($items) == 1) {

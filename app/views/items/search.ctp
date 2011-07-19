@@ -56,6 +56,10 @@
  |
 		<?php echo $this->Paginator->next(__('next', true) . ' >>', array(), null, array('class' => 'disabled'));?>
 	</div>
+<?php elseif(!empty($search_terms)): ?>
+<p>No items were found matching those terms.</p>
+<?php else: ?>
+<p>You should try searching for something.</p>
 <?php endif; ?>
 </div>
 

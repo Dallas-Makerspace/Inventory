@@ -30,6 +30,7 @@ foreach($path as $parent) {
 		<th><?php __('Manufacturer'); ?></th>
 		<th><?php __('Room'); ?></th>
 		<th><?php __('Location'); ?></th>
+		<th><?php __('Owner'); ?></th>
 		<th><?php __('Qty'); ?></th>
 	</tr>
 	<?php
@@ -59,6 +60,7 @@ foreach($path as $parent) {
 			<td><?php echo $this->Html->link($item['manufacturer'], array('controller' => 'items', 'action' => 'search', 'manufacturer' => $item['manufacturer'])); ?></td>
 			<td><?php echo $this->Html->link($item['Room']['name'],array('controller'=>'rooms','action'=>'view',$item['Room']['id']));?></td>
 			<td><?php echo $this->Html->link($item['location'], array('controller' => 'items', 'action' => 'search', 'location' => $item['location'])); ?></td>
+			<td><?php echo $this->Html->link($item['owner'], array('controller' => 'items', 'action' => 'search', 'owner' => $item['owner'])); ?></td>
 			<td><?php echo $item['qty'];?></td>
 		</tr>
 	<?php endforeach; ?>
