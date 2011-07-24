@@ -13,7 +13,10 @@ class ItemsController extends AppController {
 			$this->Session->setFlash(__('Invalid item', true));
 			$this->redirect(array('action' => 'index'));
 		}
-		$this->set('item', $this->Item->read(null, $id));
+
+		$item = $this->Item->read(null, $id);
+		$attributes = $this->Item->ItemAttribute->findAllByItemId($id);
+		$this->set(compact('item','attributes'));
 	}
 
 	function add() {
@@ -93,15 +96,7 @@ class ItemsController extends AppController {
 
 		$search = false;
 
-		if(isset($this->passedArgs['function'])) {
-			foreach(explode(' ',$this->passedArgs['function']) as $string) {
-				$search['OR'][] = array('Item.function LIKE' => "%{$string}%");
-			}
-		} elseif(isset($this->passedArgs['manufacturer'])) {
-			foreach(explode(' ',$this->passedArgs['manufacturer']) as $string) {
-				$search['OR'][] = array('Item.manufacturer LIKE' => "%{$string}%");
-			}
-		} elseif(isset($this->passedArgs['name'])) {
+		if(isset($this->passedArgs['name'])) {
 			foreach(explode(' ',$this->passedArgs['name']) as $string) {
 				$search['OR'][] = array('Item.name LIKE' => "%{$string}%");
 			}
@@ -116,8 +111,6 @@ class ItemsController extends AppController {
 		} elseif($search_terms) {
 			$search = array('OR' => array());
 			foreach(explode(' ',$search_terms) as $string) {
-				$search['OR'][] = array('Item.function LIKE' => "%{$string}%");
-				$search['OR'][] = array('Item.manufacturer LIKE' => "%{$string}%");
 				$search['OR'][] = array('Item.name LIKE' => "%{$string}%");
 				$search['OR'][] = array('Item.location LIKE' => "%{$string}%");
 				$search['OR'][] = array('Item.owner LIKE' => "%{$string}%");

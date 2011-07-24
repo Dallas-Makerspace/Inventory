@@ -68,36 +68,8 @@ class Item extends AppModel {
 	);
 
 	var $hasMany = array(
-		'Comment' => array(
-			'className' => 'Comment',
-			'foreignKey' => 'item_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => 'Comment.created ASC',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => '',
-			'dependent' => true
-		),
-		'Verification' => array(
-			'className' => 'Verification',
-			'foreignKey' => 'item_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => 'Verification.created DESC',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => '',
-			'dependent' => true
-		),
-		'Upload' => array(
-			'className' => 'Upload',
+		'ItemAttribute' => array(
+			'className' => 'ItemAttribute',
 			'foreignKey' => 'item_id',
 			'dependent' => false,
 			'conditions' => '',
@@ -107,8 +79,46 @@ class Item extends AppModel {
 			'offset' => '',
 			'exclusive' => '',
 			'finderQuery' => '',
-			'counterQuery' => '',
-			'dependent' => true
+			'counterQuery' => ''
+		),
+		'Comment' => array(
+			'className' => 'Comment',
+			'foreignKey' => 'item_id',
+			'dependent' => true,
+			'conditions' => '',
+			'fields' => '',
+			'order' => 'Comment.created ASC',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'Verification' => array(
+			'className' => 'Verification',
+			'foreignKey' => 'item_id',
+			'dependent' => true,
+			'conditions' => '',
+			'fields' => '',
+			'order' => 'Verification.created DESC',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'Upload' => array(
+			'className' => 'Upload',
+			'foreignKey' => 'item_id',
+			'dependent' => true,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
 		)
 	);
 

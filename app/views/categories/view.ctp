@@ -26,8 +26,6 @@ foreach($path as $parent) {
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
 		<th><?php __('Name'); ?></th>
-		<th><?php __('Function'); ?></th>
-		<th><?php __('Manufacturer'); ?></th>
 		<th><?php __('Room'); ?></th>
 		<th><?php __('Location'); ?></th>
 		<th><?php __('Owner'); ?></th>
@@ -43,21 +41,6 @@ foreach($path as $parent) {
 		?>
 		<tr<?php echo $class;?>>
 			<td><?php echo $this->Html->link($item['name'], array('controller' => 'items', 'action' => 'view', $item['id'])); ?></td>
-			<td>
-				<?php
-				$functions = explode(',',$item['function']);
-				$first = true;
-				foreach($functions as $function) {
-					if($first) {
-						$first = false;
-					} else {
-						echo ', ';
-					}
-					echo $this->Html->link($function, array('controller' => 'items', 'action' => 'search', 'function' => trim($function)));
-				}
-				?>
-			</td>
-			<td><?php echo $this->Html->link($item['manufacturer'], array('controller' => 'items', 'action' => 'search', 'manufacturer' => $item['manufacturer'])); ?></td>
 			<td><?php echo $this->Html->link($item['Room']['name'],array('controller'=>'rooms','action'=>'view',$item['Room']['id']));?></td>
 			<td><?php echo $this->Html->link($item['location'], array('controller' => 'items', 'action' => 'search', 'location' => $item['location'])); ?></td>
 			<td><?php echo $this->Html->link($item['owner'], array('controller' => 'items', 'action' => 'search', 'owner' => $item['owner'])); ?></td>

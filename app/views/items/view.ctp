@@ -7,27 +7,6 @@ Location:<br />
 <?php echo $this->Qrcode->url($this->Html->url(array('action' => 'search', 'location' => $item['Item']['location']),true),array('size' => '150x150','margin' => 0)); ?><br />
 </div>
 	<dl><?php $i = 0; $class = ' class="altrow"';?>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Function'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php
-			$functions = explode(',',$item['Item']['function']);
-			$first = true;
-			foreach($functions as $function) {
-				if($first) {
-					$first = false;
-				} else {
-					echo ', ';
-				}
-				echo $this->Html->link($function, array('controller' => 'items', 'action' => 'search', 'function' => trim($function)));
-			}
-			?>
-			&nbsp;
-		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Manufacturer'); ?></dt>
-		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $this->Html->link($item['Item']['manufacturer'],array('action' => 'search', 'manufacturer' => $item['Item']['manufacturer'])); ?>
-			&nbsp;
-		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Room'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
 			<?php echo $this->Html->link($item['Room']['name'], array('controller' => 'rooms', 'action' => 'view', $item['Room']['id'])); ?>
@@ -90,6 +69,48 @@ Location:<br />
 			?>
 		</dd>
 	</dl>
+</div>
+
+<div class="related">
+	<h3><?php __('Attributes');?></h3>
+		<div class="actions">
+		<ul>
+			<li><?php echo $this->Html->link(__('New Attribute', true), array('controller' => 'item_attributes', 'action' => 'add', 'item' => $item['Item']['id']));?> </li>
+		</ul>
+		</div>
+	<?php if (!empty($attributes)):?>
+	<table cellpadding = "0" cellspacing = "0">
+	<tr>
+		<th><?php __('Attribute'); ?></th>
+		<th><?php __('Value'); ?></th>
+		<th class="noprint"><?php __('Actions'); ?></th>
+	</tr>
+	<?php
+		$i = 0;
+		foreach ($attributes as $attribute):
+			$class = null;
+			if ($i++ % 2 == 0) {
+				$class = ' class="altrow"';
+			}
+		?>
+		<tr<?php echo $class;?>>
+			<td><?php echo h($attribute['Attribute']['name']);?></td>
+			<td><?php echo $this->Html->link(
+				$attribute['ItemAttribute']['value'],
+				array('controller' => 'items', 'action' => 'search',
+					strtolower($attribute['Attribute']['name']) => strtolower($attribute['ItemAttribute']['value']))
+				); ?>
+			</th>
+			<td class="noprint">
+				<?php echo $this->Html->link(__('Edit',true),array('controller' => 'item_attributes', 'action' => 'edit', $attribute['ItemAttribute']['id'])); ?>&nbsp;
+				<?php echo $this->Html->link(__('Delete', true),array('controller' => 'uploads', 'action' => 'delete', $attribute['ItemAttribute']['id']), null, sprintf(__('Are you sure you want to delete %s?', true), $attribute['Attribute']['name'])); ?>
+			</td>
+		</tr>
+	<?php endforeach; ?>
+	</table>
+	<?php else: ?>
+	<p>No additional attributes have been added to this item.</p>
+	<?php endif; ?>
 </div>
 
 <div class="related">

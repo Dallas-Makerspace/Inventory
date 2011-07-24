@@ -5,8 +5,6 @@
 	<?php
 		echo $this->Form->input('id');
 		echo $this->Form->input('name');
-		echo $this->Form->input('function');
-		echo $this->Form->input('manufacturer');
 		echo $this->Form->input('room_id');
 		echo $this->Form->input('location');
 		echo $this->Form->input('owner');
