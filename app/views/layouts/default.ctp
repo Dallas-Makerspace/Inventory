@@ -30,7 +30,6 @@
 <li><?php echo $this->Html->link(__('Inventory', true), array('controller' => 'categories', 'action' => 'index'));?></li>
 <li><?php echo $this->Html->link(__('Wiki', true), 'http://dallasmakerspace.org/wiki');?></li>
 <li><?php echo $this->Html->link(__('Blog', true), 'http://dallasmakerspace.org/blog');?></li>
-<li><?php echo $this->Html->link(__('Forums', true), 'http://dallasmakerspace.org/forums');?></li>
 <li class="right"><?php echo $this->Html->link(__('Help', true), array('controller' => 'pages', 'action' => 'display', 'help'));?></li>
 <?php if(isset($uid)): ?>
 <li class="right"><?php echo $this->Html->link(__('Logout', true), array('controller' => 'users', 'action' => 'logout'));?></li>
