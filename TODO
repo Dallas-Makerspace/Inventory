@@ -1,0 +1,27 @@
+Still need to port:
+*Comments
+*ItemAttributes/Attributes
+*Uploads
+*Verifcations
+
+Features:
+*Add pagination of items to categories/view
+*Add pagination of items to rooms/view
+*Room printouts with QR codes
+*Tooltips or help page to explain fields
+*Advanced search
+*Grid view for categories
+*CSV export system
+*Thumbnails for uploaded files
+*AJAXify things like adding comments, files, verifications, etc
+*Front-end interface to view audit logs
+*Redesign to look nicer?
+
+$ grep -r 'TODO' app/
+app/Model/Datasource/LdapSource.php:				//TODO  add in code to strip models if people try to use model notation like 'User.cn'=>'foobar' etc.
+app/Model/Datasource/LdapSource.php:					// TODO pb ldap_search & $queryData['limit']
+app/Controller/UsersController.php:			// TODO: Not yet implimented
+app/Controller/UsersController.php:			// TODO: Not yet implimented
+app/Controller/CategoriesController.php:		//TODO: paginate the items
+app/Controller/CategoriesController.php:					//TODO: Investigate if there is an easy way to do this
+app/View/Helper/QrcodeHelper.php: * TODO: better checking of limits and valid inputs

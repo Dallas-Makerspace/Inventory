@@ -31,4 +31,15 @@ App::uses('Model', 'Model');
  * @package       app.Model
  */
 class AppModel extends Model {
+	function isPositiveInteger($check) {
+		$value = array_values($check);
+		$value = $value[0];
+		return preg_match('/^[1-9][0-9]*$/',$value);
+	}
+
+	function isNonNegativeInteger($check) {
+		$value = array_values($check);
+		$value = $value[0];
+		return preg_match('/^[0-9]*$/',$value);
+	}
 }

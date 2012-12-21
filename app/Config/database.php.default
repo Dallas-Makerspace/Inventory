@@ -80,4 +80,18 @@ class DATABASE_CONFIG {
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);
+
+	public $ldap = array (
+		'datasource' => 'LdapSource',
+		'host' => 'localhost',
+		'port' => 389,
+		'basedn' => 'dc=dallasmakerspace,dc=org',
+		'login' => '', //For Proxy Userdn
+		'password' => '',  //For Proxy UserDN password
+		'database' => '',
+		'tls' => false,
+		'type' => 'OpenLDAP', //Available types are 'OpenLDAP', 'ActiveDirectory', 'Netscape'
+		'version' => 3
+	);
+
 }

@@ -31,4 +31,11 @@ App::uses('Helper', 'View');
  * @package       app.View.Helper
  */
 class AppHelper extends Helper {
+	// This function makes it so URLs don't have /admin/ in them just because you are on an admin page
+	function url($url = null, $full = false) {
+		if(is_array($url) && !isset($url['admin'])){
+			$url['admin'] = false;
+		}
+		return parent::url($url, $full);
+	}
 }

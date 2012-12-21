@@ -1,0 +1,12 @@
+#sidebar, #menu, .actions, .paging, .noprint, .debug, #cakeSqlLog {
+display: none;
+}
+
+.printonly {
+display: inline;
+}
+
+#wrap,#content {
+width: 100%;
+padding: 0;
+}

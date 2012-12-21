@@ -30,6 +30,11 @@ App::uses('AppController', 'Controller');
  * @link http://book.cakephp.org/2.0/en/controllers/pages-controller.html
  */
 class PagesController extends AppController {
+	public function beforeFilter() {
+		parent::beforeFilter();
+		// Allow all pages
+		$this->Auth->allow('*');
+	}
 
 /**
  * Controller name

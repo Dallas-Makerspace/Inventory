@@ -1,0 +1,3 @@
+[submodule "app/Plugin/AuditLog"]
+	path = app/Plugin/AuditLog
+	url = git://github.com/robwilkerson/CakePHP-Audit-Log-Plugin.git
