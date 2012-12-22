@@ -15,7 +15,6 @@ Features:
 *Attributes - add/edit/delete for admins
 *API?
 *Short URLs for QR codes
-*Enable markdown for text field output
 
 $ grep -r 'TODO' app/
 app/Model/Datasource/LdapSource.php:				//TODO  add in code to strip models if people try to use model notation like 'User.cn'=>'foobar' etc.

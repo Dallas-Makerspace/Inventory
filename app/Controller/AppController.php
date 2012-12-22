@@ -40,8 +40,8 @@ class AppController extends Controller {
 			'csrfUseOnce' => false,
 		),
 		'Auth' => array(
-			'loginRedirect' => array('controller' => 'users', 'action' => 'dashboard'),
-			'logoutRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
+			'loginRedirect' => array('controller' => 'categories', 'action' => 'index'),
+			'logoutRedirect' => array('controller' => 'users', 'action' => 'login'),
 			'authError' => 'Access denied',
 			'authorize' => array('Controller'),
 		),
