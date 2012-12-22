@@ -62,7 +62,7 @@ Location:<br />
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
 			<?php
 				if(!empty($item['Item']['notes'])) {
-					echo str_replace("\n",'<br />',$this->Text->autoLink(h($item['Item']['notes'])));
+					echo $this->Text->autoLinkUrls($this->Markdown->parse($item['Item']['notes']), array('escape' => false));
 				} else {
 					echo '<i>None</i>';
 				}
@@ -138,7 +138,7 @@ Location:<br />
 		<tr<?php echo $class;?>>
 			<td><?php echo $this->Html->link($file['name'],array('controller' => 'attachments', 'action' => 'view', $file['id'], $file['name']));?></td>
 			<td><?php echo $this->Number->toReadableSize($file['size']); ?></td>
-			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink(h($file['description'])));?></td>
+			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink($file['description']));?></td>
 			<!-- <a href="#" class="negative button"><span class="trash icon"></span>Delete</a> -->
 			<td class="noprint"><?php echo $this->Form->postLink(__('Delete', true),array('controller' => 'attachments', 'action' => 'delete', $file['id']), null, __('Are you sure you want to delete %s?', $file['name'])); ?></td>
 		</tr>
@@ -177,7 +177,7 @@ Location:<br />
 		<tr<?php echo $class;?>>
 			<td><?php echo $this->Time->niceShort($comment['created']);?></td>
 			<td><?php echo h($comment['username']);?></td>
-			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink(h($comment['message'])));?></td>
+			<td><?php echo $this->Text->autoLinkUrls($this->Markdown->parse($comment['message']), array('escape' => false)); ?></td>
 			<?php if(in_array('admins',$user['User']['groups'])): ?>
 				<td><?php echo $this->Form->postLink('x', array('controller' => 'comments', 'action' => 'delete', $comment['id'], 'admin' => true),array('type'=>'submit','class'=>'button danger primary'), __('Are you sure you want to delete by %s?', $comment['username'])); ?></td>
 			<?php endif; ?>
@@ -215,7 +215,7 @@ Location:<br />
 		<tr<?php echo $class;?>>
 			<td><?php echo $this->Time->niceShort($verification['created']);?></td>
 			<td><?php echo h($verification['username']);?></td>
-			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink(h($verification['comment'])));?></td>
+			<td><?php echo $this->Text->autoLinkUrls($this->Markdown->parse($verification['comment']), array('escape' => false)); ?></td>
 		</tr>
 	<?php endforeach; ?>
 	</table>
