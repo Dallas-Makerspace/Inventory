@@ -36,7 +36,9 @@ class AppController extends Controller {
 	public $components = array(
 		'Session',
 		'RequestHandler',
-		//'Security', // Disabled because it seems to delete the session right after login...
+		'Security' => array(
+			'csrfUseOnce' => false,
+		),
 		'Auth' => array(
 			'loginRedirect' => array('controller' => 'users', 'action' => 'dashboard'),
 			'logoutRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
@@ -72,5 +74,15 @@ class AppController extends Controller {
 
 		// Default, no access to actions
 		return false;
+	}
+
+	function beforeRender() {
+		// This allows us to require "at least one category" when adding/editing Item
+		$model = Inflector::singularize($this->name);
+		foreach($this->{$model}->hasAndBelongsToMany as $k=>$v) {
+			if(isset($this->{$model}->validationErrors[$k])) {
+				$this->{$model}->{$k}->validationErrors[$k] = $this->{$model}->validationErrors[$k];
+			}
+		}
 	}
 }

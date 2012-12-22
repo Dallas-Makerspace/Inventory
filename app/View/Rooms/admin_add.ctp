@@ -1,7 +1,7 @@
 <div class="rooms form">
 <?php echo $this->Form->create('Room');?>
 	<fieldset>
-		<legend><?php __('Add Room'); ?></legend>
+		<legend><?php echo __('Add Room'); ?></legend>
 	<?php
 		echo $this->Form->input('name');
 	?>

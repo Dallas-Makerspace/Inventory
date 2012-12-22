@@ -1,7 +1,7 @@
 <div class="items form">
 <?php echo $this->Form->create('Item');?>
 	<fieldset>
-		<legend><?php __('Add Item'); ?></legend>
+		<legend><?php echo __('New Item'); ?></legend>
 	<?php
 		echo $this->Form->input('name');
 		echo $this->Form->input('room_id');
@@ -9,7 +9,7 @@
 		echo $this->Form->input('owner',array('default' => 'DMS'));
 		echo $this->Form->input('qty',array('label' => 'Quantity'));
 		echo $this->Form->input('notes');
-		echo $this->Form->input('Category');
+		echo $this->Form->input('Category',array('required' => true, 'div' => array('class' => 'required')));
 	?>
 	</fieldset>
 <?php

@@ -6,7 +6,7 @@ App::uses('AppModel', 'Model');
  * @property Room $Room
  * @property Comment $Comment
  * @property ItemAttribute $ItemAttribute
- * @property Upload $Upload
+ * @property Attachment $Attachment
  * @property Verification $Verification
  * @property Category $Category
  */
@@ -24,7 +24,7 @@ class Item extends AppModel {
  *
  * @var array
  */
-	public $actsAs = array('AuditLog.Auditable');
+	public $actsAs = array('AuditLog.Auditable','HabtmCounterCache.HabtmCounterCache');
 
 /**
  * Validation rules
@@ -35,7 +35,7 @@ class Item extends AppModel {
 		'name' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+				'message' => 'This field is required.',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -45,7 +45,7 @@ class Item extends AppModel {
 		'location' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+				'message' => 'This field is required.',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -55,17 +55,28 @@ class Item extends AppModel {
 		'owner' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+				'message' => 'This field is required.',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+		// TODO: How should we handle qty for things like "4.2 liters of ______", by container?
 		'qty' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
+			'naturalNumber' => array(
+				'rule' => array('naturalNumber'),
+				'message' => 'Quantity must be a natural number.',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'Category' => array(
+			'multiple' => array(
+				'rule' => array('multiple', array('min' => 1)),
+				'message' => 'You must select at least one category.',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -100,7 +111,7 @@ class Item extends AppModel {
 		'Comment' => array(
 			'className' => 'Comment',
 			'foreignKey' => 'item_id',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
@@ -113,7 +124,7 @@ class Item extends AppModel {
 		'ItemAttribute' => array(
 			'className' => 'ItemAttribute',
 			'foreignKey' => 'item_id',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
@@ -123,10 +134,10 @@ class Item extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'Upload' => array(
-			'className' => 'Upload',
+		'Attachment' => array(
+			'className' => 'Attachment',
 			'foreignKey' => 'item_id',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
@@ -139,7 +150,7 @@ class Item extends AppModel {
 		'Verification' => array(
 			'className' => 'Verification',
 			'foreignKey' => 'item_id',
-			'dependent' => false,
+			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
@@ -176,4 +187,25 @@ class Item extends AppModel {
 		)
 	);
 
+/**
+ * beforeDelete callback
+ * 
+ */
+	public function beforeDelete() {
+		// If the directory doesn't exist, there's nothing that needs to be done
+		if(!is_dir(APP.'Attachments'.DS.$this->id)) {
+			return true;
+		}
+
+		// Using the File utility because I can
+		App::uses('Folder', 'Utility');
+		$folder = new Folder(APP.'Attachments'.DS.$this->id);
+
+		// Delete the Attachments folder for this item
+		if(!$folder->delete()) {
+			// Unable to delete the folder, so we shouldn't delete the database record
+			return false;
+		}
+		return true;
+	}
 }

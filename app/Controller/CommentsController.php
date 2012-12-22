@@ -8,73 +8,33 @@ App::uses('AppController', 'Controller');
 class CommentsController extends AppController {
 
 /**
- * index method
- *
- * @return void
- */
-	public function index() {
-		$this->Comment->recursive = 0;
-		$this->set('comments', $this->paginate());
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-		$this->Comment->id = $id;
-		if (!$this->Comment->exists()) {
-			throw new NotFoundException(__('Invalid comment'));
-		}
-		$this->set('comment', $this->Comment->read(null, $id));
-	}
-
-/**
  * add method
  *
  * @return void
  */
 	public function add() {
 		if ($this->request->is('post')) {
+			if(!$this->Comment->Item->read(null,$this->request->data['Comment']['item_id'])) {
+				$this->Session->setFlash(__('Invalid item specified', true));
+				$this->redirect(array('controller' => 'categories', 'action' => 'index'));
+			}
 			$this->Comment->create();
+			$user = $this->Auth->user();
+			$this->request->data['Comment']['username'] = $user['User']['username'];
 			if ($this->Comment->save($this->request->data)) {
-				$this->Session->setFlash(__('The comment has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('The comment has been saved', true),'default',array('class' => 'success-message'));
+				$this->redirect(array('controller' => 'items', 'action' => 'view', $this->request->data['Comment']['item_id']));
 			} else {
-				$this->Session->setFlash(__('The comment could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The comment could not be saved. Please, try again.', true));
 			}
 		}
-		$items = $this->Comment->Item->find('list');
-		$this->set(compact('items'));
-	}
-
-/**
- * edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function edit($id = null) {
-		$this->Comment->id = $id;
-		if (!$this->Comment->exists()) {
-			throw new NotFoundException(__('Invalid comment'));
+		
+		if(!isset($this->passedArgs['item'])) {
+			$this->Session->setFlash(__('No item specified', true));
+			$this->redirect(array('controller' => 'categories', 'action' => 'index'));
 		}
-		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Comment->save($this->request->data)) {
-				$this->Session->setFlash(__('The comment has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The comment could not be saved. Please, try again.'));
-			}
-		} else {
-			$this->request->data = $this->Comment->read(null, $id);
-		}
-		$items = $this->Comment->Item->find('list');
-		$this->set(compact('items'));
+		
+		$this->request->data['Comment']['item_id'] = $this->passedArgs['item'];
 	}
 
 /**
@@ -85,7 +45,7 @@ class CommentsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function delete($id = null) {
+	public function admin_delete($id = null) {
 		if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();
 		}
@@ -93,11 +53,12 @@ class CommentsController extends AppController {
 		if (!$this->Comment->exists()) {
 			throw new NotFoundException(__('Invalid comment'));
 		}
+		$comment = $this->Comment->read();
 		if ($this->Comment->delete()) {
 			$this->Session->setFlash(__('Comment deleted'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect(array('controller' => 'items', 'action' => 'view', $comment['Item']['id'], 'admin' => false));
 		}
 		$this->Session->setFlash(__('Comment was not deleted'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect(array('controller' => 'items', 'action' => 'view', $comment['Item']['id'], 'admin' => false));
 	}
 }

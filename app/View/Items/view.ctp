@@ -78,7 +78,7 @@ Location:<br />
 			<li><?php echo $this->Html->link(__('New Attribute', true), array('controller' => 'item_attributes', 'action' => 'add', 'item' => $item['Item']['id']));?> </li>
 		</ul>
 		</div>
-	<?php if (!empty($attributes)):?>
+	<?php if (!empty($item['ItemAttribute'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
 		<th><?php echo __('Attribute'); ?></th>
@@ -87,7 +87,7 @@ Location:<br />
 	</tr>
 	<?php
 		$i = 0;
-		foreach ($attributes as $attribute):
+		foreach ($item['ItemAttribute'] as $attribute):
 			$class = null;
 			if ($i++ % 2 == 0) {
 				$class = ' class="altrow"';
@@ -96,14 +96,14 @@ Location:<br />
 		<tr<?php echo $class;?>>
 			<td><?php echo h($attribute['Attribute']['name']);?></td>
 			<td><?php echo $this->Html->link(
-				$attribute['ItemAttribute']['value'],
+				$attribute['value'],
 				array('controller' => 'items', 'action' => 'search',
-					strtolower($attribute['Attribute']['name']) => strtolower($attribute['ItemAttribute']['value']))
+					strtolower($attribute['Attribute']['name']) => strtolower($attribute['value']))
 				); ?>
 			</th>
 			<td class="noprint">
-				<?php echo $this->Html->link(__('Edit',true),array('controller' => 'item_attributes', 'action' => 'edit', $attribute['ItemAttribute']['id'])); ?>&nbsp;
-				<?php echo $this->Html->link(__('Delete', true),array('controller' => 'uploads', 'action' => 'delete', $attribute['ItemAttribute']['id']), null, sprintf(__('Are you sure you want to delete %s?', true), $attribute['Attribute']['name'])); ?>
+				<?php echo $this->Html->link(__('Edit',true),array('controller' => 'item_attributes', 'action' => 'edit', $attribute['id'])); ?>&nbsp;
+				<?php echo $this->Form->postLink(__('Delete', true),array('controller' => 'item_attributes', 'action' => 'delete', $attribute['id']), null, __('Are you sure you want to delete %s?', $attribute['Attribute']['name'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -112,15 +112,14 @@ Location:<br />
 	<p>No additional attributes have been added to this item.</p>
 	<?php endif; ?>
 </div>
-
 <div class="related">
 	<h3><?php echo __('Files');?></h3>
 		<div class="actions">
 		<ul>
-			<li><?php echo $this->Html->link(__('New File', true), array('controller' => 'uploads', 'action' => 'add', 'item' => $item['Item']['id']));?> </li>
+			<li><?php echo $this->Html->link(__('New File', true), array('controller' => 'attachments', 'action' => 'add', 'item' => $item['Item']['id']));?> </li>
 		</ul>
 		</div>
-	<?php if (!empty($item['Upload'])):?>
+	<?php if (!empty($item['Attachment'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
 		<th><?php echo __('Name'); ?></th>
@@ -130,18 +129,18 @@ Location:<br />
 	</tr>
 	<?php
 		$i = 0;
-		foreach ($item['Upload'] as $upload):
+		foreach ($item['Attachment'] as $file):
 			$class = null;
 			if ($i++ % 2 == 0) {
 				$class = ' class="altrow"';
 			}
 		?>
 		<tr<?php echo $class;?>>
-			<td><?php echo $this->Html->link($upload['name'],'/files/'.$upload['name']);?></td>
-			<td><?php echo $this->Number->toReadableSize($upload['size']); ?></td>
-			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink(h($upload['description'])));?></td>
+			<td><?php echo $this->Html->link($file['name'],array('controller' => 'attachments', 'action' => 'view', $file['id'], $file['name']));?></td>
+			<td><?php echo $this->Number->toReadableSize($file['size']); ?></td>
+			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink(h($file['description'])));?></td>
 			<!-- <a href="#" class="negative button"><span class="trash icon"></span>Delete</a> -->
-			<td class="noprint"><?php echo $this->Html->link(__('Delete', true),array('controller' => 'uploads', 'action' => 'delete', $upload['id']), null, sprintf(__('Are you sure you want to delete %s?', true), $upload['name'])); ?></td>
+			<td class="noprint"><?php echo $this->Form->postLink(__('Delete', true),array('controller' => 'attachments', 'action' => 'delete', $file['id']), null, __('Are you sure you want to delete %s?', $file['name'])); ?></td>
 		</tr>
 	<?php endforeach; ?>
 	</table>
@@ -160,9 +159,12 @@ Location:<br />
 	<?php if (!empty($item['Comment'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
-		<th style="width: 70px;"><?php echo __('Date'); ?></th>
-		<th style="width: 120px;"><?php echo __('Username'); ?></th>
+		<th><?php echo __('Date'); ?></th>
+		<th><?php echo __('Username'); ?></th>
 		<th><?php echo __('Message'); ?></th>
+		<?php if(in_array('admins',$user['User']['groups'])): ?>
+			<th><?php echo __('Delete'); ?></th>
+		<?php endif; ?>
 	</tr>
 	<?php
 		$i = 0;
@@ -173,9 +175,12 @@ Location:<br />
 			}
 		?>
 		<tr<?php echo $class;?>>
-			<td><?php echo $comment['created'];?></td>
+			<td><?php echo $this->Time->niceShort($comment['created']);?></td>
 			<td><?php echo h($comment['username']);?></td>
 			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink(h($comment['message'])));?></td>
+			<?php if(in_array('admins',$user['User']['groups'])): ?>
+				<td><?php echo $this->Form->postLink('x', array('controller' => 'comments', 'action' => 'delete', $comment['id'], 'admin' => true),array('type'=>'submit','class'=>'button danger primary'), __('Are you sure you want to delete by %s?', $comment['username'])); ?></td>
+			<?php endif; ?>
 		</tr>
 	<?php endforeach; ?>
 	</table>
@@ -195,8 +200,8 @@ Location:<br />
 	<?php if (!empty($item['Verification'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
-		<th style="width: 70px;"><?php echo __('Date'); ?></th>
-		<th style="width: 120px;"><?php echo __('Username'); ?></th>
+		<th><?php echo __('Date'); ?></th>
+		<th><?php echo __('Username'); ?></th>
 		<th><?php echo __('Message'); ?></th>
 	</tr>
 	<?php
@@ -208,7 +213,7 @@ Location:<br />
 			}
 		?>
 		<tr<?php echo $class;?>>
-			<td><?php echo $verification['created'];?></td>
+			<td><?php echo $this->Time->niceShort($verification['created']);?></td>
 			<td><?php echo h($verification['username']);?></td>
 			<td><?php echo str_replace("\n",'<br />',$this->Text->autoLink(h($verification['comment'])));?></td>
 		</tr>
@@ -222,7 +227,7 @@ Location:<br />
 <?php
 $page_actions = array(
 	$this->Html->link(__('Edit Item', true), array('action' => 'edit', $item['Item']['id'])),
-	$this->Html->link(__('Delete Item', true), array('action' => 'delete', $item['Item']['id']), null, __('Are you sure you want to delete %s?', $item['Item']['name']))
+	$this->Form->postLink(__('Delete Item', true), array('action' => 'delete', $item['Item']['id']), null, __('Are you sure you want to delete %s?', $item['Item']['name']))
 );
 $this->set(compact('page_actions'));
 ?>

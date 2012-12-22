@@ -29,7 +29,20 @@ class ItemsController extends AppController {
 		if (!$this->Item->exists()) {
 			throw new NotFoundException(__('Invalid item'));
 		}
-		$this->set('item', $this->Item->read(null, $id));
+
+		$this->Item->Behaviors->attach('Containable');
+		$this->Item->contain(array(
+			'Room',
+			'Category',
+			'ItemAttribute' => 'Attribute',
+			'Attachment',
+			'Comment',
+			'Verification',
+		));
+
+		$item = $this->Item->read(null, $id);
+
+		$this->set(compact('item'));
 	}
 
 /**
@@ -41,14 +54,21 @@ class ItemsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Item->create();
 			if ($this->Item->save($this->request->data)) {
-				$this->Session->setFlash(__('The item has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('The item has been created'));
+				$this->redirect(array('action' => 'view', $this->Item->id));
 			} else {
 				$this->Session->setFlash(__('The item could not be saved. Please, try again.'));
 			}
 		}
 		$rooms = $this->Item->Room->find('list');
-		$categories = $this->Item->Category->find('list');
+
+		$category_tree = $this->Item->Category->generateTreeList(null,null,null," - ");
+		if ($category_tree) {
+			foreach ($category_tree as $key=>$value) {
+				$categories[$key] = $value;
+			}
+		}
+
 		$this->set(compact('rooms', 'categories'));
 	}
 
@@ -67,7 +87,7 @@ class ItemsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Item->save($this->request->data)) {
 				$this->Session->setFlash(__('The item has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'view', $this->Item->id));
 			} else {
 				$this->Session->setFlash(__('The item could not be saved. Please, try again.'));
 			}
@@ -75,7 +95,14 @@ class ItemsController extends AppController {
 			$this->request->data = $this->Item->read(null, $id);
 		}
 		$rooms = $this->Item->Room->find('list');
-		$categories = $this->Item->Category->find('list');
+
+		$category_tree = $this->Item->Category->generateTreeList(null,null,null," - ");
+		if ($category_tree) {
+			foreach ($category_tree as $key=>$value) {
+				$categories[$key] = $value;
+			}
+		}
+
 		$this->set(compact('rooms', 'categories'));
 	}
 

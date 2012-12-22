@@ -6,23 +6,15 @@ App::uses('AppController', 'Controller');
 class UsersController extends AppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
-		// Allow register, login and logout for everyone
+		// Allow login and logout for everyone
 		$this->Auth->allow('login', 'logout');
 	}
 
 /**
- * index method
+ * login method
  *
  * @return void
  */
-	public function index() {
-		//$this->User->recursive = 1;
-		//debug($this->User->find('all',array('conditions' => array('uid' => 'aceat64'))));
-		//debug($this->User->Group->find('all',array('conditions' => array('memberuid' => 'mrhavens'))));
-		//debug($this->User->find('all',array('conditions' => array('structuralobjectclass' => 'inetOrgPerson'))));
-		//debug($this->User->Group->find('all',array('conditions' => array('structuralobjectclass' => 'posixGroup'))));
-	}
-
 	public function login() {
 		if ($this->request->is('post')) {
 			$username = $this->request->data['User']['username'];
@@ -52,10 +44,22 @@ class UsersController extends AppController {
 		}
 	}
 
+/**
+ * logout method
+ *
+ * @return void
+ */
 	public function logout() {
 		$this->redirect($this->Auth->logout());
 	}
 
+/**
+ * Check to see if a plaintext password matches a hash
+ *
+ * @param string $hash Hashed password
+ * @param string $pass Plaintext password
+ * @return bool
+ */
 	protected function _check_password($hash,$pass) {
 		// From LDAP the passwords look like: {SSHA}832/II3YHCEpqC3TZQBOYrZaruXEPzU2
 		if (preg_match('/{([^}]+)}(.*)/',$hash,$matches)) {
