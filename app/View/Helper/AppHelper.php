@@ -31,4 +31,12 @@ App::uses('Helper', 'View');
  * @package       app.View.Helper
  */
 class AppHelper extends Helper {
+
+	// This removes admin routing from links that don't explicitly have admin=>true
+	function url($url = null, $full = false) {
+		if(is_array($url) && !isset($url['admin'])){
+			$url['admin'] = false;
+		}
+		return parent::url($url, $full);
+	}
 }
