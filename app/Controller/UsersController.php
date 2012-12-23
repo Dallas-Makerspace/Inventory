@@ -17,7 +17,7 @@ class UsersController extends AppController {
  */
 	public function login() {
 		if ($this->request->is('post')) {
-			$username = $this->request->data['User']['username'];
+			$username = strtolower($this->request->data['User']['username']);
 			$result = $this->User->find('first',array('conditions' => array('uid' => $username)));
 			if (isset($result['User']['userpassword']) && $this->_check_password($result['User']['userpassword'],$this->request->data['User']['password'])) {
 				$user = array('User' => array(
