@@ -196,12 +196,27 @@ class CakeResponseTest extends CakeTestCase {
 	}
 
 /**
- * Tests the send method and changing the content type
+ * Data provider for content type tests.
  *
+ * @return array
  */
-	public function testSendChangingContentType() {
+	public static function charsetTypeProvider() {
+		return array(
+			array('mp3', 'audio/mpeg'),
+			array('js', 'application/javascript; charset=UTF-8'),
+			array('json', 'application/json; charset=UTF-8'),
+			array('xml', 'application/xml; charset=UTF-8'),
+			array('txt', 'text/plain; charset=UTF-8'),
+		);
+	}
+
+/**
+ * Tests the send method and changing the content type
+ * @dataProvider charsetTypeProvider
+ */
+	public function testSendChangingContentType($original, $expected) {
 		$response = $this->getMock('CakeResponse', array('_sendHeader', '_sendContent', '_setCookies'));
-		$response->type('mp3');
+		$response->type($original);
 		$response->body('the response body');
 		$response->expects($this->once())->method('_sendContent')->with('the response body');
 		$response->expects($this->at(0))->method('_setCookies');
@@ -210,26 +225,28 @@ class CakeResponseTest extends CakeTestCase {
 		$response->expects($this->at(2))
 			->method('_sendHeader')->with('Content-Length', 17);
 		$response->expects($this->at(3))
-			->method('_sendHeader')->with('Content-Type', 'audio/mpeg');
+			->method('_sendHeader')->with('Content-Type', $expected);
 		$response->send();
 	}
 
 /**
- * Tests the send method and changing the content type to JSON
+ * Tests the send method and changing the content type to JS without adding the charset
  *
  */
-	public function testSendChangingContentTypeJSON() {
+	public function testSendChangingContentTypeWithoutCharset() {
 		$response = $this->getMock('CakeResponse', array('_sendHeader', '_sendContent', '_setCookies'));
-		$response->type('json');
-		$response->body('the response body');
-		$response->expects($this->once())->method('_sendContent')->with('the response body');
+		$response->type('js');
+		$response->charset('');
+
+		$response->body('var $foo = "bar";');
+		$response->expects($this->once())->method('_sendContent')->with('var $foo = "bar";');
 		$response->expects($this->at(0))->method('_setCookies');
 		$response->expects($this->at(1))
 			->method('_sendHeader')->with('HTTP/1.1 200 OK');
 		$response->expects($this->at(2))
 			->method('_sendHeader')->with('Content-Length', 17);
 		$response->expects($this->at(3))
-			->method('_sendHeader')->with('Content-Type', 'application/json; charset=UTF-8');
+			->method('_sendHeader')->with('Content-Type', 'application/javascript');
 		$response->send();
 	}
 
@@ -831,7 +848,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByEtagStar() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = '*';
 		$response = $this->getMock('CakeResponse', array('notModified'));
@@ -844,7 +861,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByEtagExact() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = 'W/"something", "other"';
 		$response = $this->getMock('CakeResponse', array('notModified'));
@@ -857,7 +874,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByEtagAndTime() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = 'W/"something", "other"';
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = '2012-01-01 00:00:00';
@@ -872,7 +889,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByEtagAndTimeMismatch() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = 'W/"something", "other"';
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = '2012-01-01 00:00:00';
@@ -887,7 +904,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByEtagMismatch() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = 'W/"something-else", "other"';
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = '2012-01-01 00:00:00';
@@ -902,7 +919,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByTime() {
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = '2012-01-01 00:00:00';
 		$response = $this->getMock('CakeResponse', array('notModified'));
@@ -915,7 +932,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedNoHints() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = 'W/"something", "other"';
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = '2012-01-01 00:00:00';

@@ -24,7 +24,7 @@ App::uses('Router', 'Routing');
  * Test case for CakeRoute
  *
  * @package       Cake.Test.Case.Routing.Route
- **/
+ */
 class CakeRouteTest extends CakeTestCase {
 
 /**
@@ -41,7 +41,7 @@ class CakeRouteTest extends CakeTestCase {
  * Test the construction of a CakeRoute
  *
  * @return void
- **/
+ */
 	public function testConstruction() {
 		$route = new CakeRoute('/:controller/:action/:id', array(), array('id' => '[0-9]+'));
 
@@ -55,7 +55,7 @@ class CakeRouteTest extends CakeTestCase {
  * test Route compiling.
  *
  * @return void
- **/
+ */
 	public function testBasicRouteCompiling() {
 		$route = new CakeRoute('/', array('controller' => 'pages', 'action' => 'display', 'home'));
 		$result = $route->compile();
@@ -107,7 +107,7 @@ class CakeRouteTest extends CakeTestCase {
  * test compiling routes with keys that have patterns
  *
  * @return void
- **/
+ */
 	public function testRouteCompilingWithParamPatterns() {
 		$route = new CakeRoute(
 			'/:controller/:action/:id',
@@ -235,7 +235,7 @@ class CakeRouteTest extends CakeTestCase {
  * test that routes match their pattern.
  *
  * @return void
- **/
+ */
 	public function testMatchBasic() {
 		$route = new CakeRoute('/:controller/:action/:id', array('plugin' => null));
 		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => null));
@@ -880,7 +880,6 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-
 /**
  * test that utf-8 patterns work for :section
  *
@@ -888,14 +887,14 @@ class CakeRouteTest extends CakeTestCase {
  */
 	public function testUTF8PatternOnSection() {
 		$route = new CakeRoute(
-			'/:section', 
+			'/:section',
 			array('plugin' => 'blogs', 'controller' => 'posts' , 'action' => 'index' ),
 			array(
 				'persist' => array('section'),
 				'section' => 'آموزش|weblog'
 			)
 		);
-		
+
 		$result = $route->parse('/%D8%A2%D9%85%D9%88%D8%B2%D8%B4');
 		$expected = array('section' => 'آموزش', 'plugin' => 'blogs', 'controller' => 'posts', 'action' => 'index', 'pass' => array(), 'named' => array());
 		$this->assertEquals($expected, $result);

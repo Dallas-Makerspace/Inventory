@@ -466,6 +466,12 @@ class Mysql extends DboSource {
 					$col[] = $idx->Column_name;
 					$index[$idx->Key_name]['column'] = $col;
 				}
+				if (!empty($idx->Sub_part)) {
+					if (!isset($index[$idx->Key_name]['length'])) {
+						$index[$idx->Key_name]['length'] = array();
+					}
+					$index[$idx->Key_name]['length'][$idx->Column_name] = $idx->Sub_part;
+				}
 			}
 			// @codingStandardsIgnoreEnd
 			$indexes->closeCursor();
@@ -535,21 +541,13 @@ class Mysql extends DboSource {
 	}
 
 /**
- * Generate a MySQL "drop table" statement for the given Schema object
+ * Generate a "drop table" statement for the given table
  *
- * @param CakeSchema $schema An instance of a subclass of CakeSchema
- * @param string $table Optional.  If specified only the table name given will be generated.
- *                      Otherwise, all tables defined in the schema are generated.
- * @return string
+ * @param type $table Name of the table to drop
+ * @return string Drop table SQL statement
  */
-	public function dropSchema(CakeSchema $schema, $table = null) {
-		$out = '';
-		foreach ($schema->tables as $curTable => $columns) {
-			if (!$table || $table === $curTable) {
-				$out .= 'DROP TABLE IF EXISTS ' . $this->fullTableName($curTable) . ";\n";
-			}
-		}
-		return $out;
+	protected function _dropTable($table) {
+		return 'DROP TABLE IF EXISTS ' . $this->fullTableName($table) . ";";
 	}
 
 /**
@@ -564,6 +562,55 @@ class Mysql extends DboSource {
 			return $this->buildTableParameters($parameters['change']);
 		}
 		return array();
+	}
+
+/**
+ * Format indexes for create table
+ *
+ * @param array $indexes An array of indexes to generate SQL from
+ * @param string $table Optional table name, not used
+ * @return array An array of SQL statements for indexes
+ * @see DboSource::buildIndex()
+ */
+	public function buildIndex($indexes, $table = null) {
+		$join = array();
+		foreach ($indexes as $name => $value) {
+			$out = '';
+			if ($name === 'PRIMARY') {
+				$out .= 'PRIMARY ';
+				$name = null;
+			} else {
+				if (!empty($value['unique'])) {
+					$out .= 'UNIQUE ';
+				}
+				$name = $this->startQuote . $name . $this->endQuote;
+			}
+			// length attribute only used for MySQL datasource, for TEXT/BLOB index columns
+			$out .= 'KEY ' . $name . ' (';
+			if (is_array($value['column'])) {
+				if (isset($value['length'])) {
+					$vals = array();
+					foreach ($value['column'] as $column) {
+						$name = $this->name($column);
+						if (isset($value['length'])) {
+							$name .= $this->_buildIndexSubPart($value['length'], $column);
+						}
+						$vals[] = $name;
+					}
+					$out .= implode(', ', $vals);
+				} else {
+					$out .= implode(', ', array_map(array(&$this, 'name'), $value['column']));
+				}
+			} else {
+				$out .= $this->name($value['column']);
+				if (isset($value['length'])) {
+					$out .= $this->_buildIndexSubPart($value['length'], $value['column']);
+				}
+			}
+			$out .= ')';
+			$join[] = $out;
+		}
+		return $join;
 	}
 
 /**
@@ -593,6 +640,23 @@ class Mysql extends DboSource {
 			}
 		}
 		return $alter;
+	}
+
+/**
+ * Format length for text indexes
+ *
+ * @param array $lengths An array of lengths for a single index
+ * @param string $column The column for which to generate the index length
+ * @return string Formatted length part of an index field
+ */
+	protected function _buildIndexSubPart($lengths, $column) {
+		if (is_null($lengths)) {
+			return '';
+		}
+		if (!isset($lengths[$column])) {
+			return '';
+		}
+		return '(' . $lengths[$column] . ')';
 	}
 
 /**

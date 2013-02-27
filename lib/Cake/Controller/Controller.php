@@ -26,20 +26,20 @@ App::uses('CakeEventManager', 'Event');
  * Provides basic functionality, such as rendering views inside layouts,
  * automatic model availability, redirection, callbacks, and more.
  *
- * Controllers should provide a number of 'action' methods.  These are public methods on the controller
- * that are not prefixed with a '_' and not part of Controller.  Each action serves as an endpoint for
- * performing a specific action on a resource or collection of resources.  For example adding or editing a new
+ * Controllers should provide a number of 'action' methods. These are public methods on the controller
+ * that are not prefixed with a '_' and not part of Controller. Each action serves as an endpoint for
+ * performing a specific action on a resource or collection of resources. For example adding or editing a new
  * object, or listing a set of objects.
  *
- * You can access request parameters, using `$this->request`.  The request object contains all the POST, GET and FILES
+ * You can access request parameters, using `$this->request`. The request object contains all the POST, GET and FILES
  * that were part of the request.
  *
- * After performing the required actions, controllers are responsible for creating a response.  This usually
- * takes the form of a generated View, or possibly a redirection to another controller action.  In either case
+ * After performing the required actions, controllers are responsible for creating a response. This usually
+ * takes the form of a generated View, or possibly a redirection to another controller action. In either case
  * `$this->response` allows you to manipulate all aspects of the response.
  *
  * Controllers are created by Dispatcher based on request parameters and routing. By default controllers and actions
- * use conventional names.  For example `/posts/index` maps to `PostsController::index()`.  You can re-map urls
+ * use conventional names. For example `/posts/index` maps to `PostsController::index()`. You can re-map urls
  * using Router::connect().
  *
  * @package       Cake.Controller
@@ -434,7 +434,7 @@ class Controller extends Object implements CakeEventListener {
 
 /**
  * Sets the request objects and configures a number of controller properties
- * based on the contents of the request.  The properties that get set are
+ * based on the contents of the request. The properties that get set are
  *
  * - $this->request - To the $request parameter
  * - $this->plugin - To the $request->params['plugin']
@@ -463,7 +463,7 @@ class Controller extends Object implements CakeEventListener {
 	}
 
 /**
- * Dispatches the controller action.  Checks that the action
+ * Dispatches the controller action. Checks that the action
  * exists and isn't private.
  *
  * @param CakeRequest $request
@@ -930,14 +930,7 @@ class Controller extends Object implements CakeEventListener {
 			}
 		}
 
-		$viewClass = $this->viewClass;
-		if ($this->viewClass != 'View') {
-			list($plugin, $viewClass) = pluginSplit($viewClass, true);
-			$viewClass = $viewClass . 'View';
-			App::uses($viewClass, $plugin . 'View');
-		}
-
-		$View = new $viewClass($this);
+		$this->View = $this->_getViewObject();
 
 		$models = ClassRegistry::keys();
 		foreach ($models as $currentModel) {
@@ -946,13 +939,12 @@ class Controller extends Object implements CakeEventListener {
 				$className = get_class($currentObject);
 				list($plugin) = pluginSplit(App::location($className));
 				$this->request->params['models'][$currentObject->alias] = compact('plugin', 'className');
-				$View->validationErrors[$currentObject->alias] =& $currentObject->validationErrors;
+				$this->View->validationErrors[$currentObject->alias] =& $currentObject->validationErrors;
 			}
 		}
 
 		$this->autoRender = false;
-		$this->View = $View;
-		$this->response->body($View->render($view, $layout));
+		$this->response->body($this->View->render($view, $layout));
 		return $this->response;
 	}
 
@@ -1082,7 +1074,7 @@ class Controller extends Object implements CakeEventListener {
 	}
 
 /**
- * Called before the controller action.  You can use this method to configure and customize components
+ * Called before the controller action. You can use this method to configure and customize components
  * or perform logic that needs to happen before each controller action.
  *
  * @return void
@@ -1222,6 +1214,22 @@ class Controller extends Object implements CakeEventListener {
  */
 	protected function _scaffoldError($method) {
 		return $this->scaffoldError($method);
+	}
+
+/**
+ * Constructs the view class instance based on the controller property
+ *
+ * @return View
+ */
+	protected function _getViewObject() {
+		$viewClass = $this->viewClass;
+		if ($this->viewClass !== 'View') {
+			list($plugin, $viewClass) = pluginSplit($viewClass, true);
+			$viewClass = $viewClass . 'View';
+			App::uses($viewClass, $plugin . 'View');
+		}
+
+		return new $viewClass($this);
 	}
 
 }

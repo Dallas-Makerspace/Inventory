@@ -330,6 +330,26 @@ class MysqlTest extends CakeTestCase {
 		$result = $this->Dbo->index('with_fulltext', false);
 		$this->Dbo->rawQuery('DROP TABLE ' . $name);
 		$this->assertEquals($expected, $result);
+
+		$name = $this->Dbo->fullTableName('with_text_index');
+		$this->Dbo->rawQuery('CREATE TABLE ' . $name . ' (id int(11) AUTO_INCREMENT, text_field text, primary key(id), KEY `text_index` ( `text_field`(20) ));');
+		$expected = array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'text_index' => array('column' => 'text_field', 'unique' => 0, 'length' => array('text_field' => 20)),
+		);
+		$result = $this->Dbo->index('with_text_index', false);
+		$this->Dbo->rawQuery('DROP TABLE ' . $name);
+		$this->assertEquals($expected, $result);
+
+		$name = $this->Dbo->fullTableName('with_compound_text_index');
+		$this->Dbo->rawQuery('CREATE TABLE ' . $name . ' (id int(11) AUTO_INCREMENT, text_field1 text, text_field2 text, primary key(id), KEY `text_index` ( `text_field1`(20), `text_field2`(20) ));');
+		$expected = array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'text_index' => array('column' => array('text_field1', 'text_field2'), 'unique' => 0, 'length' => array('text_field1' => 20, 'text_field2' => 20)),
+		);
+		$result = $this->Dbo->index('with_compound_text_index', false);
+		$this->Dbo->rawQuery('DROP TABLE ' . $name);
+		$this->assertEquals($expected, $result);
 	}
 
 /**
@@ -1190,7 +1210,7 @@ class MysqlTest extends CakeTestCase {
  */
 	protected function _buildRelatedModels(Model $model) {
 		foreach ($model->associations() as $type) {
-			foreach ($model->{$type} as $assoc => $assocData) {
+			foreach ($model->{$type} as $assocData) {
 				if (is_string($assocData)) {
 					$className = $assocData;
 				} elseif (isset($assocData['className'])) {
@@ -2256,6 +2276,12 @@ class MysqlTest extends CakeTestCase {
 		$expected = " WHERE `HardCandy`.`name` LIKE 'to be or%' AND `Candy`.`name` LIKE '%not to be%'";
 		$this->assertEquals($expected, $result);
 
+		$result = $this->Dbo->conditions(array(
+			"Person.name || ' ' || Person.surname ILIKE" => '%mark%'
+		));
+		$expected = " WHERE `Person`.`name` || ' ' || `Person`.`surname` ILIKE '%mark%'";
+		$this->assertEquals($expected, $result);
+
 		$result = $this->Dbo->conditions(array('score BETWEEN ? AND ?' => array(90.1, 95.7)));
 		$expected = " WHERE `score` BETWEEN 90.1 AND 95.7";
 		$this->assertEquals($expected, $result);
@@ -2753,7 +2779,7 @@ class MysqlTest extends CakeTestCase {
  * @return void
  */
 	public function testDropSchemaNoSchema() {
-		$result = $this->Dbo->dropSchema(null);
+		$this->Dbo->dropSchema(null);
 	}
 
 /**
@@ -2957,6 +2983,19 @@ class MysqlTest extends CakeTestCase {
 		);
 		$result = $this->Dbo->buildIndex($data);
 		$expected = array('FULLTEXT KEY `MyFtIndex` (`name`, `description`)');
+
+		$data = array(
+			'MyTextIndex' => array('column' => 'text_field', 'length' => array('text_field' => 20))
+		);
+		$result = $this->Dbo->buildIndex($data);
+		$expected = array('KEY `MyTextIndex` (`text_field`(20))');
+		$this->assertEquals($expected, $result);
+
+		$data = array(
+			'MyMultiTextIndex' => array('column' => array('text_field1', 'text_field2'), 'length' => array('text_field1' => 20, 'text_field2' => 20))
+		);
+		$result = $this->Dbo->buildIndex($data);
+		$expected = array('KEY `MyMultiTextIndex` (`text_field1`(20), `text_field2`(20))');
 		$this->assertEquals($expected, $result);
 	}
 
@@ -3635,7 +3674,7 @@ class MysqlTest extends CakeTestCase {
  * @return void
  */
 	public function testExceptionOnBrokenConnection() {
-		$dbo = new Mysql(array(
+		new Mysql(array(
 			'driver' => 'mysql',
 			'host' => 'imaginary_host',
 			'login' => 'mark',

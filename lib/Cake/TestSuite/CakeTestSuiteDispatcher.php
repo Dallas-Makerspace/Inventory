@@ -55,7 +55,7 @@ class CakeTestSuiteDispatcher {
 	protected $_baseUrl;
 
 /**
- * Base dir of the request.  Used for accessing assets.
+ * Base dir of the request. Used for accessing assets.
  *
  * @var string
  */
@@ -117,7 +117,7 @@ class CakeTestSuiteDispatcher {
 	}
 
 /**
- * Checks that PHPUnit is installed.  Will exit if it doesn't
+ * Checks that PHPUnit is installed. Will exit if it doesn't
  *
  * @return void
  */
@@ -239,7 +239,7 @@ class CakeTestSuiteDispatcher {
 		try {
 			self::time();
 			$command = new CakeTestSuiteCommand('CakeTestLoader', $commandArgs);
-			$result = $command->run($options);
+			$command->run($options);
 		} catch (MissingConnectionException $exception) {
 			ob_end_clean();
 			$baseDir = $this->_baseDir;

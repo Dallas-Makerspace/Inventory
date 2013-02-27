@@ -164,7 +164,7 @@ class CakeLogTest extends CakeTestCase {
  * explicit tests for drop()
  *
  * @return void
- **/
+ */
 	public function testDrop() {
 		CakeLog::config('file', array(
 			'engine' => 'FileLog',
@@ -654,7 +654,7 @@ class CakeLogTest extends CakeTestCase {
 		$this->_deleteLogs();
 		$this->_resetLogConfig();
 
-		$levels = CakeLog::levels(array('spam', 'eggs'));
+		CakeLog::levels(array('spam', 'eggs'));
 
 		$testMessage = 'error message';
 		CakeLog::write('error', $testMessage);

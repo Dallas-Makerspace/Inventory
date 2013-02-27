@@ -444,10 +444,20 @@ class CakeResponse {
 		if (in_array($this->_status, array(304, 204))) {
 			return;
 		}
-		if (strpos($this->_contentType, 'text/') === 0) {
+		$whitelist = array(
+			'application/javascript', 'application/json', 'application/xml', 'application/rss+xml'
+		);
+
+		$charset = false;
+		if (
+			$this->_charset &&
+			(strpos($this->_contentType, 'text/') === 0 || in_array($this->_contentType, $whitelist))
+		) {
+			$charset = true;
+		}
+
+		if ($charset) {
 			$this->header('Content-Type', "{$this->_contentType}; charset={$this->_charset}");
-		} elseif ($this->_contentType === 'application/json') {
-			$this->header('Content-Type', "{$this->_contentType}; charset=UTF-8");
 		} else {
 			$this->header('Content-Type', "{$this->_contentType}");
 		}
@@ -931,7 +941,7 @@ class CakeResponse {
  * conflicting headers
  *
  * @return void
- **/
+ */
 	public function notModified() {
 		$this->statusCode(304);
 		$this->body('');
@@ -958,7 +968,7 @@ class CakeResponse {
  * @param string|array $cacheVariances a single Vary string or a array
  * containig the list for variances.
  * @return array
- **/
+ */
 	public function vary($cacheVariances = null) {
 		if ($cacheVariances !== null) {
 			$cacheVariances = (array)$cacheVariances;
@@ -990,7 +1000,7 @@ class CakeResponse {
  * @param boolean $weak whether the response is semantically the same as
  * other with th same hash or not
  * @return string
- **/
+ */
 	public function etag($tag = null, $weak = false) {
 		if ($tag !== null) {
 			$this->_headers['Etag'] = sprintf('%s"%s"', ($weak) ? 'W/' : null, $tag);
@@ -1091,7 +1101,7 @@ class CakeResponse {
  * is marked as so accordingly so the client can be informed of that.
  *
  * In order to mark a response as not modified, you need to set at least
- * the Last-Modified etag response header before calling this method.  Otherwise
+ * the Last-Modified etag response header before calling this method. Otherwise
  * a comparison will not be possible.
  *
  * @param CakeRequest $request Request object
@@ -1118,7 +1128,7 @@ class CakeResponse {
 	}
 
 /**
- * String conversion.  Fetches the response body as a string.
+ * String conversion. Fetches the response body as a string.
  * Does *not* send headers.
  *
  * @return string
@@ -1251,7 +1261,7 @@ class CakeResponse {
 
 			$httpRange = env('HTTP_RANGE');
 			if (isset($httpRange)) {
-				list($toss, $range) = explode('=', $httpRange);
+				list(, $range) = explode('=', $httpRange);
 
 				$size = $fileSize - 1;
 				$length = $fileSize - $range;
@@ -1314,7 +1324,9 @@ class CakeResponse {
  * @return boolean
  */
 	protected function _clearBuffer() {
+		//@codingStandardsIgnoreStart
 		return @ob_end_clean();
+		//@codingStandardsIgnoreEnd
 	}
 
 /**
@@ -1323,8 +1335,10 @@ class CakeResponse {
  * @return void
  */
 	protected function _flushBuffer() {
+		//@codingStandardsIgnoreStart
 		@flush();
 		@ob_flush();
+		//@codingStandardsIgnoreEnd
 	}
 
 }

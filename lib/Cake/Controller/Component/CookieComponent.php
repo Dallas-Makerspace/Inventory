@@ -110,7 +110,7 @@ class CookieComponent extends Component {
 /**
  * HTTP only cookie
  *
- * Set to true to make HTTP only cookies.  Cookies that are HTTP only
+ * Set to true to make HTTP only cookies. Cookies that are HTTP only
  * are not accessible in Javascript.
  *
  * @var boolean
@@ -208,7 +208,8 @@ class CookieComponent extends Component {
  * @param string|array $key Key for the value
  * @param mixed $value Value
  * @param boolean $encrypt Set to true to encrypt value, false otherwise
- * @param integer|string $expires Can be either Unix timestamp, or date string
+ * @param integer|string $expires Can be either the number of seconds until a cookie
+ *   expires, or a strtotime compatible time offset.
  * @return void
  * @link http://book.cakephp.org/2.0/en/core-libraries/components/cookie.html#CookieComponent::write
  */
@@ -529,4 +530,3 @@ class CookieComponent extends Component {
 		return $array;
 	}
 }
-

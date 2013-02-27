@@ -167,7 +167,7 @@ class ModelValidationTest extends BaseModelTest {
 	}
 
 /**
- * Test that invalidFields() integrates well with save().  And that fieldList can be an empty type.
+ * Test that invalidFields() integrates well with save(). And that fieldList can be an empty type.
  *
  * @return void
  */
@@ -2139,7 +2139,7 @@ class ModelValidationTest extends BaseModelTest {
  * @return void
  */
 	public function testValidatorTypehintException() {
-		$Validator = new ModelValidator('asdasds');
+		new ModelValidator('asdasds');
 	}
 
 /**
@@ -2177,7 +2177,7 @@ class ModelValidationTest extends BaseModelTest {
  * after a presentation made to show off this new feature
  *
  * @return void
- **/
+ */
 	public function testDynamicValidationRuleBuilding() {
 		$model = new Article;
 		$validator = $model->validator();

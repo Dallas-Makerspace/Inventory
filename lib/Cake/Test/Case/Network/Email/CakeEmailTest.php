@@ -42,8 +42,8 @@ class TestCakeEmail extends CakeEmail {
  * Wrap to protected method
  *
  */
-	public function wrap($text) {
-		return parent::_wrap($text);
+	public function wrap($text, $length = CakeEmail::LINE_LENGTH_MUST) {
+		return parent::_wrap($text, $length);
 	}
 
 /**
@@ -699,7 +699,7 @@ class CakeEmailTest extends CakeTestCase {
 	public function testExtendTransport() {
 		$this->setExpectedException('SocketException');
 		$this->CakeEmail->transport('Extend');
-		$result = $this->CakeEmail->transportClass();
+		$this->CakeEmail->transportClass();
 	}
 
 /**
@@ -991,7 +991,6 @@ class CakeEmailTest extends CakeTestCase {
  * @return void
  */
 	public function testSendWithLog() {
-		$path = CAKE . 'Test' . DS . 'test_app' . DS . 'tmp' . DS;
 		CakeLog::config('email', array(
 			'engine' => 'FileLog',
 			'path' => TMP
@@ -1238,7 +1237,7 @@ class CakeEmailTest extends CakeTestCase {
 		$this->CakeEmail->config(array());
 		$this->CakeEmail->viewVars(array('value' => 12345));
 		$this->CakeEmail->emailFormat('both');
-		$result = $this->CakeEmail->send();
+		$this->CakeEmail->send();
 
 		$message = $this->CakeEmail->message();
 		$boundary = $this->CakeEmail->getBoundary();
@@ -1338,7 +1337,7 @@ class CakeEmailTest extends CakeTestCase {
 		$this->CakeEmail->config(array('empty'));
 		$this->CakeEmail->template('default', 'default');
 		$this->CakeEmail->emailFormat('both');
-		$result = $this->CakeEmail->send();
+		$this->CakeEmail->send();
 
 		$expected = '<p>This email was sent using the <a href="http://cakephp.org">CakePHP Framework</a></p>';
 		$this->assertContains($expected, $this->CakeEmail->message(CakeEmail::MESSAGE_HTML));
@@ -1398,7 +1397,7 @@ class CakeEmailTest extends CakeTestCase {
  */
 	public function testWrap() {
 		$text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac turpis orci, non commodo odio. Morbi nibh nisi, vehicula pellentesque accumsan amet.';
-		$result = $this->CakeEmail->wrap($text);
+		$result = $this->CakeEmail->wrap($text, CakeEmail::LINE_LENGTH_SHOULD);
 		$expected = array(
 			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac turpis orci,',
 			'non commodo odio. Morbi nibh nisi, vehicula pellentesque accumsan amet.',
@@ -1407,7 +1406,7 @@ class CakeEmailTest extends CakeTestCase {
 		$this->assertSame($expected, $result);
 
 		$text = 'Lorem ipsum dolor sit amet, consectetur < adipiscing elit. Donec ac turpis orci, non commodo odio. Morbi nibh nisi, vehicula > pellentesque accumsan amet.';
-		$result = $this->CakeEmail->wrap($text);
+		$result = $this->CakeEmail->wrap($text, CakeEmail::LINE_LENGTH_SHOULD);
 		$expected = array(
 			'Lorem ipsum dolor sit amet, consectetur < adipiscing elit. Donec ac turpis',
 			'orci, non commodo odio. Morbi nibh nisi, vehicula > pellentesque accumsan',
@@ -1417,7 +1416,7 @@ class CakeEmailTest extends CakeTestCase {
 		$this->assertSame($expected, $result);
 
 		$text = '<p>Lorem ipsum dolor sit amet,<br> consectetur adipiscing elit.<br> Donec ac turpis orci, non <b>commodo</b> odio. <br /> Morbi nibh nisi, vehicula pellentesque accumsan amet.<hr></p>';
-		$result = $this->CakeEmail->wrap($text);
+		$result = $this->CakeEmail->wrap($text, CakeEmail::LINE_LENGTH_SHOULD);
 		$expected = array(
 			'<p>Lorem ipsum dolor sit amet,<br> consectetur adipiscing elit.<br> Donec ac',
 			'turpis orci, non <b>commodo</b> odio. <br /> Morbi nibh nisi, vehicula',
@@ -1427,7 +1426,7 @@ class CakeEmailTest extends CakeTestCase {
 		$this->assertSame($expected, $result);
 
 		$text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac <a href="http://cakephp.org">turpis</a> orci, non commodo odio. Morbi nibh nisi, vehicula pellentesque accumsan amet.';
-		$result = $this->CakeEmail->wrap($text);
+		$result = $this->CakeEmail->wrap($text, CakeEmail::LINE_LENGTH_SHOULD);
 		$expected = array(
 			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac',
 			'<a href="http://cakephp.org">turpis</a> orci, non commodo odio. Morbi nibh',
@@ -1437,7 +1436,7 @@ class CakeEmailTest extends CakeTestCase {
 		$this->assertSame($expected, $result);
 
 		$text = 'Lorem ipsum <a href="http://www.cakephp.org/controller/action/param1/param2" class="nice cool fine amazing awesome">ok</a>';
-		$result = $this->CakeEmail->wrap($text);
+		$result = $this->CakeEmail->wrap($text, CakeEmail::LINE_LENGTH_SHOULD);
 		$expected = array(
 			'Lorem ipsum',
 			'<a href="http://www.cakephp.org/controller/action/param1/param2" class="nice cool fine amazing awesome">',
@@ -1447,7 +1446,7 @@ class CakeEmailTest extends CakeTestCase {
 		$this->assertSame($expected, $result);
 
 		$text = 'Lorem ipsum withonewordverybigMorethanthelineshouldsizeofrfcspecificationbyieeeavailableonieeesite ok.';
-		$result = $this->CakeEmail->wrap($text);
+		$result = $this->CakeEmail->wrap($text, CakeEmail::LINE_LENGTH_SHOULD);
 		$expected = array(
 			'Lorem ipsum',
 			'withonewordverybigMorethanthelineshouldsizeofrfcspecificationbyieeeavailableonieeesite',

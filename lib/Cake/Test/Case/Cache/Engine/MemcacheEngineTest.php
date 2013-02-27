@@ -93,7 +93,6 @@ class MemcacheEngineTest extends CakeTestCase {
 			'persistent' => true,
 			'compress' => false,
 			'engine' => 'Memcache',
-			'persistent' => true,
 			'groups' => array()
 		);
 		$this->assertEquals($expecting, $settings);
@@ -460,7 +459,7 @@ class MemcacheEngineTest extends CakeTestCase {
  * Test clearing a cache group
  *
  * @return void
- **/
+ */
 	public function testGroupClear() {
 		Cache::config('memcache_groups', array(
 			'engine' => 'Memcache',

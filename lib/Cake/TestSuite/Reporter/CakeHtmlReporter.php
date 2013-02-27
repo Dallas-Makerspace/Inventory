@@ -99,7 +99,7 @@ class CakeHtmlReporter extends CakeBaseReporter {
 			$buffer .= "<strong>EMPTY</strong>";
 		}
 
-		foreach ($testCases as $testCaseFile => $testCase) {
+		foreach ($testCases as $testCase) {
 			$title = explode(DS, str_replace('.test.php', '', $testCase));
 			$title[count($title) - 1] = Inflector::camelize($title[count($title) - 1]);
 			$title = implode(' / ', $title);
@@ -251,11 +251,11 @@ class CakeHtmlReporter extends CakeBaseReporter {
 		$testName = get_class($test) . '(' . $test->getName() . ')';
 
 		$actualMsg = $expectedMsg = null;
-		if (method_exists($message, 'comparisonFailure')) {
-			$failure = $message->comparisonFailure();
+		if (method_exists($message, 'getComparisonFailure')) {
+			$failure = $message->getComparisonFailure();
 			if (is_object($failure)) {
-				$actualMsg = $message->getComparisonFailure()->getActualAsString();
-				$expectedMsg = $message->getComparisonFailure()->getExpectedAsString();
+				$actualMsg = $failure->getActualAsString();
+				$expectedMsg = $failure->getExpectedAsString();
 			}
 		}
 

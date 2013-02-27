@@ -300,7 +300,7 @@ class ViewTest extends CakeTestCase {
 		$this->Controller->params['pass'] = array('home');
 
 		$ThemeView = new TestThemeView($this->Controller);
-		$ThemeView->theme = 'TestTheme';
+		$ThemeView->theme = 'test_theme';
 		$expected = CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS . 'Pages' . DS . 'home.ctp';
 		$result = $ThemeView->getViewFileName('home');
 		$this->assertEquals($expected, $result);
@@ -309,6 +309,7 @@ class ViewTest extends CakeTestCase {
 		$result = $ThemeView->getViewFileName('/Posts/index');
 		$this->assertEquals($expected, $result);
 
+		$ThemeView->theme = 'TestTheme';
 		$expected = CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS . 'Themed' . DS . 'TestTheme' . DS . 'Layouts' . DS . 'default.ctp';
 		$result = $ThemeView->getLayoutFileName();
 		$this->assertEquals($expected, $result);
@@ -546,11 +547,7 @@ class ViewTest extends CakeTestCase {
 		$this->ThemeController->params['pass'] = array('home');
 
 		$View = new TestThemeView($this->ThemeController);
-		ob_start();
-		$result = $View->getViewFileName('does_not_exist');
-		$expected = ob_get_clean();
-		$this->assertRegExp("/PagesController::/", $expected);
-		$this->assertRegExp("/views(\/|\\\)themed(\/|\\\)my_theme(\/|\\\)pages(\/|\\\)does_not_exist.ctp/", $expected);
+		$View->getViewFileName('does_not_exist');
 	}
 
 /**
@@ -577,11 +574,7 @@ class ViewTest extends CakeTestCase {
 		$this->ThemeController->theme = 'my_theme';
 
 		$View = new TestThemeView($this->ThemeController);
-		ob_start();
 		$result = $View->getLayoutFileName();
-		$expected = ob_get_clean();
-		$this->assertRegExp("/Missing Layout/", $expected);
-		$this->assertRegExp("/views(\/|\\\)themed(\/|\\\)my_theme(\/|\\\)layouts(\/|\\\)whatever.ctp/", $expected);
 	}
 
 /**
@@ -675,7 +668,7 @@ class ViewTest extends CakeTestCase {
  * @return void
  */
 	public function testElementInexistent() {
-		$result = $this->View->element('non_existent_element');
+		$this->View->element('non_existent_element');
 	}
 
 /**
@@ -685,7 +678,7 @@ class ViewTest extends CakeTestCase {
  * @return void
  */
 	public function testElementInexistent2() {
-		$result = $this->View->element('TestPlugin.plugin_element', array(), array('plugin' => 'test_plugin'));
+		$this->View->element('TestPlugin.plugin_element', array(), array('plugin' => 'test_plugin'));
 	}
 
 /**
@@ -695,7 +688,7 @@ class ViewTest extends CakeTestCase {
  * @return void
  */
 	public function testElementInexistent3() {
-		$result = $this->View->element('test_plugin.plugin_element');
+		$this->View->element('test_plugin.plugin_element');
 	}
 
 /**
@@ -740,7 +733,7 @@ class ViewTest extends CakeTestCase {
 	public function testElementCacheHelperNoCache() {
 		$Controller = new ViewPostsController();
 		$View = new TestView($Controller);
-		$helpers = $View->loadHelpers();
+		$View->loadHelpers();
 		$result = $View->element('test_element', array('ram' => 'val', 'test' => array('foo', 'bar')));
 		$this->assertEquals('this is the test element', $result);
 	}
@@ -978,7 +971,7 @@ class ViewTest extends CakeTestCase {
 		$result = $View->render('index', false);
 		$this->assertEquals('posts index', $result);
 
-		$attached = $View->Helpers->attached();
+		$attached = $View->Helpers->loaded();
 		$this->assertEquals(array('Session', 'Html', 'Form', 'Number'), $attached);
 
 		$this->PostsController->helpers = array('Html', 'Form', 'Number', 'TestPlugin.PluggedHelper');
@@ -987,7 +980,7 @@ class ViewTest extends CakeTestCase {
 		$result = $View->render('index', false);
 		$this->assertEquals('posts index', $result);
 
-		$attached = $View->Helpers->attached();
+		$attached = $View->Helpers->loaded();
 		$expected = array('Html', 'Form', 'Number', 'PluggedHelper');
 		$this->assertEquals($expected, $attached, 'Attached helpers are wrong.');
 	}

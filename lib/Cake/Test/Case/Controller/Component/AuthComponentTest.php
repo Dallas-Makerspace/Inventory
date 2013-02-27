@@ -418,7 +418,7 @@ class AuthComponentTest extends CakeTestCase {
 
 /**
  * test that being redirected to the login page, with no post data does
- * not set the session value.  Saving the session value in this circumstance
+ * not set the session value. Saving the session value in this circumstance
  * can cause the user to be redirected to an already public page.
  *
  * @return void
@@ -758,7 +758,7 @@ class AuthComponentTest extends CakeTestCase {
 		);
 		$this->Auth->startup($this->Controller);
 		$expected = Router::normalize($this->Auth->loginRedirect);
-		$this->assertEquals($expected, $this->Auth->redirect());
+		$this->assertEquals($expected, $this->Auth->redirectUrl());
 
 		$this->Auth->Session->delete('Auth');
 
@@ -797,7 +797,7 @@ class AuthComponentTest extends CakeTestCase {
 		$this->Auth->loginRedirect = false;
 		$this->Auth->startup($this->Controller);
 		$expected = Router::normalize('/admin');
-		$this->assertEquals($expected, $this->Auth->redirect());
+		$this->assertEquals($expected, $this->Auth->redirectUrl());
 
 		// Ticket #4750
 		// Named Parameters
@@ -901,6 +901,37 @@ class AuthComponentTest extends CakeTestCase {
 		);
 
 		$expected = Router::url($this->Auth->loginRedirect, true);
+		$Controller->expects($this->once())
+			->method('redirect')
+			->with($this->equalTo($expected));
+		$this->Auth->startup($Controller);
+	}
+
+/**
+ * testRedirectToUnauthorizedRedirect
+ *
+ * @return void
+ */
+	public function testRedirectToUnauthorizedRedirect() {
+		$url = '/party/on';
+		$this->Auth->request = $CakeRequest = new CakeRequest($url);
+		$this->Auth->request->addParams(Router::parse($url));
+		$this->Auth->authorize = array('Controller');
+		$this->Auth->login(array('username' => 'admad', 'password' => 'cake'));
+		$this->Auth->unauthorizedRedirect = array(
+			'controller' => 'no_can_do', 'action' => 'jack'
+		);
+
+		$CakeResponse = new CakeResponse();
+		$Controller = $this->getMock(
+			'Controller',
+			array('on', 'redirect'),
+			array($CakeRequest, $CakeResponse)
+		);
+
+		$expected = array(
+			'controller' => 'no_can_do', 'action' => 'jack'
+		);
 		$Controller->expects($this->once())
 			->method('redirect')
 			->with($this->equalTo($expected));
@@ -1232,7 +1263,7 @@ class AuthComponentTest extends CakeTestCase {
  */
 	public function testRedirectSet() {
 		$value = array('controller' => 'users', 'action' => 'home');
-		$result = $this->Auth->redirect($value);
+		$result = $this->Auth->redirectUrl($value);
 		$this->assertEquals('/users/home', $result);
 		$this->assertEquals($value, $this->Auth->Session->read('Auth.redirect'));
 	}
@@ -1246,7 +1277,7 @@ class AuthComponentTest extends CakeTestCase {
 		$this->Auth->loginAction = array('controller' => 'users', 'action' => 'login');
 		$this->Auth->Session->write('Auth.redirect', '/users/home');
 
-		$result = $this->Auth->redirect();
+		$result = $this->Auth->redirectUrl();
 		$this->assertEquals('/users/home', $result);
 		$this->assertFalse($this->Auth->Session->check('Auth.redirect'));
 	}
@@ -1262,7 +1293,7 @@ class AuthComponentTest extends CakeTestCase {
 		$this->Auth->loginRedirect = array('controller' => 'users', 'action' => 'home');
 		$this->Auth->Session->write('Auth.redirect', array('controller' => 'users', 'action' => 'login'));
 
-		$result = $this->Auth->redirect();
+		$result = $this->Auth->redirectUrl();
 		$this->assertEquals('/users/home', $result);
 		$this->assertFalse($this->Auth->Session->check('Auth.redirect'));
 	}

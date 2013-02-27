@@ -279,7 +279,7 @@ class CakeSchema extends Object {
 				if (empty($Object->hasAndBelongsToMany)) {
 					continue;
 				}
-				foreach ($Object->hasAndBelongsToMany as $Assoc => $assocData) {
+				foreach ($Object->hasAndBelongsToMany as $assocData) {
 					if (isset($assocData['with'])) {
 						$class = $assocData['with'];
 					}
@@ -580,13 +580,17 @@ class CakeSchema extends Object {
 		if (is_array($values)) {
 			foreach ($values as $key => $val) {
 				if (is_array($val)) {
-					$vals[] = "'{$key}' => array('" . implode("', '", $val) . "')";
-				} elseif (!is_numeric($key)) {
+					$vals[] = "'{$key}' => array(" . implode(", ", $this->_values($val)) . ")";
+				} else {
 					$val = var_export($val, true);
 					if ($val === 'NULL') {
 						$val = 'null';
 					}
-					$vals[] = "'{$key}' => {$val}";
+					if (!is_numeric($key)) {
+						$vals[] = "'{$key}' => {$val}";
+					} else {
+						$vals[] = "{$val}";
+					}
 				}
 			}
 		}
@@ -603,7 +607,7 @@ class CakeSchema extends Object {
 		$db = $Obj->getDataSource();
 		$fields = $Obj->schema(true);
 
-		$columns = $props = array();
+		$columns = array();
 		foreach ($fields as $name => $value) {
 			if ($Obj->primaryKey == $name) {
 				$value['key'] = 'primary';

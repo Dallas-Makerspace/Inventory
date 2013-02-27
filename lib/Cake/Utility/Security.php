@@ -43,6 +43,7 @@ class Security {
 /**
  * Get allowed minutes of inactivity based on security level.
  *
+ * @deprecated Exists for backwards compatibility only, not used by the core
  * @return integer Allowed inactivity in minutes
  */
 	public static function inactiveMins() {
@@ -136,7 +137,7 @@ class Security {
 	}
 
 /**
- * Sets the default hash method for the Security object.  This affects all objects using
+ * Sets the default hash method for the Security object. This affects all objects using
  * Security::hash().
  *
  * @param string $hash Method to use (sha1/sha256/md5/blowfish)

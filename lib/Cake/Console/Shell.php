@@ -167,18 +167,10 @@ class Shell extends Object {
 		}
 		$this->Tasks = new TaskCollection($this);
 
-		$this->stdout = $stdout;
-		$this->stderr = $stderr;
-		$this->stdin = $stdin;
-		if (!$this->stdout) {
-			$this->stdout = new ConsoleOutput('php://stdout');
-		}
-		if (!$this->stderr) {
-			$this->stderr = new ConsoleOutput('php://stderr');
-		}
-		if (!$this->stdin) {
-			$this->stdin = new ConsoleInput('php://stdin');
-		}
+		$this->stdout = $stdout ? $stdout : new ConsoleOutput('php://stdout');
+		$this->stderr = $stderr ? $stderr : new ConsoleOutput('php://stderr');
+		$this->stdin = $stdin ? $stdin : new ConsoleInput('php://stdin');
+
 		$this->_useLogger();
 		$parent = get_parent_class($this);
 		if ($this->tasks !== null && $this->tasks !== false) {
@@ -238,27 +230,25 @@ class Shell extends Object {
  * @return boolean
  */
 	protected function _loadModels() {
-		if ($this->uses === null || $this->uses === false) {
-			return;
+		if (empty($this->uses)) {
+			return false;
 		}
 		App::uses('ClassRegistry', 'Utility');
 
-		if ($this->uses !== true && !empty($this->uses)) {
-			$uses = is_array($this->uses) ? $this->uses : array($this->uses);
+		$uses = is_array($this->uses) ? $this->uses : array($this->uses);
 
-			$modelClassName = $uses[0];
-			if (strpos($uses[0], '.') !== false) {
-				list($plugin, $modelClassName) = explode('.', $uses[0]);
-			}
-			$this->modelClass = $modelClassName;
-
-			foreach ($uses as $modelClass) {
-				list($plugin, $modelClass) = pluginSplit($modelClass, true);
-				$this->{$modelClass} = ClassRegistry::init($plugin . $modelClass);
-			}
-			return true;
+		$modelClassName = $uses[0];
+		if (strpos($uses[0], '.') !== false) {
+			list($plugin, $modelClassName) = explode('.', $uses[0]);
 		}
-		return false;
+		$this->modelClass = $modelClassName;
+
+		foreach ($uses as $modelClass) {
+			list($plugin, $modelClass) = pluginSplit($modelClass, true);
+			$this->{$modelClass} = ClassRegistry::init($plugin . $modelClass);
+		}
+
+		return true;
 	}
 
 /**
@@ -271,9 +261,7 @@ class Shell extends Object {
 			return true;
 		}
 		$this->_taskMap = TaskCollection::normalizeObjectArray((array)$this->tasks);
-		foreach ($this->_taskMap as $task => $properties) {
-			$this->taskNames[] = $task;
-		}
+		$this->taskNames = array_merge($this->taskNames, array_keys($this->_taskMap));
 		return true;
 	}
 
@@ -531,7 +519,7 @@ class Shell extends Object {
  *
  * ### Options
  *
- * - `width` The width to wrap to.  Defaults to 72
+ * - `width` The width to wrap to. Defaults to 72
  * - `wordWrap` Only wrap on words breaks (spaces) Defaults to true.
  * - `indent` Indent the text with the string provided. Defaults to null.
  *
@@ -551,9 +539,9 @@ class Shell extends Object {
  *
  * ### Output levels
  *
- * There are 3 built-in output level.  Shell::QUIET, Shell::NORMAL, Shell::VERBOSE.
+ * There are 3 built-in output level. Shell::QUIET, Shell::NORMAL, Shell::VERBOSE.
  * The verbose and quiet output levels, map to the `verbose` and `quiet` output switches
- * present in  most shells.  Using Shell::QUIET for a message means it will always display.
+ * present in  most shells. Using Shell::QUIET for a message means it will always display.
  * While using Shell::VERBOSE means it will only display when verbose output is toggled.
  *
  * @param string|array $message A string or a an array of strings to output
@@ -682,10 +670,10 @@ class Shell extends Object {
 			$File->write($data);
 			$this->out(__d('cake_console', '<success>Wrote</success> `%s`', $path));
 			return true;
-		} else {
-			$this->err(__d('cake_console', '<error>Could not write to `%s`</error>.', $path), 2);
-			return false;
 		}
+
+		$this->err(__d('cake_console', '<error>Could not write to `%s`</error>.', $path), 2);
+		return false;
 	}
 
 /**
@@ -838,7 +826,7 @@ class Shell extends Object {
  *
  * @param boolean $enable wheter to enable CakeLog output or not
  * @return void
- **/
+ */
 	protected function _useLogger($enable = true) {
 		if (!$enable) {
 			CakeLog::drop('stdout');

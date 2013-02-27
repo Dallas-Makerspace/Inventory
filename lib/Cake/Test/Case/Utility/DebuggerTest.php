@@ -65,7 +65,7 @@ class DebuggerTest extends CakeTestCase {
 	public function testDocRef() {
 		ini_set('docref_root', '');
 		$this->assertEquals(ini_get('docref_root'), '');
-		$debugger = new Debugger();
+		new Debugger();
 		$this->assertEquals(ini_get('docref_root'), 'http://php.net/');
 	}
 
@@ -84,7 +84,13 @@ class DebuggerTest extends CakeTestCase {
 		$this->assertTrue(is_array($result));
 		$this->assertEquals(4, count($result));
 
-		$pattern = '/<code><span style\="color\: \#\d+">.*?&lt;\?php/';
+		$pattern = '/<code>.*?<span style\="color\: \#\d+">.*?&lt;\?php/';
+		$this->assertRegExp($pattern, $result[0]);
+
+		$result = Debugger::excerpt(__FILE__, 10, 2);
+		$this->assertEquals(5, count($result));
+
+		$pattern = '/<span style\="color\: \#\d{6}">\*<\/span>/';
 		$this->assertRegExp($pattern, $result[0]);
 
 		$return = Debugger::excerpt('[internal]', 2, 2);
@@ -398,6 +404,32 @@ TEXT;
 		$result = Debugger::exportVar($data);
 		$expected = <<<TEXT
 false
+TEXT;
+		$this->assertTextEquals($expected, $result);
+	}
+
+/**
+ * Test exporting various kinds of false.
+ *
+ * @return void
+ */
+	public function testExportVarZero() {
+		$data = array(
+			'nothing' => '',
+			'null' => null,
+			'false' => false,
+			'szero' => '0',
+			'zero' => 0
+		);
+		$result = Debugger::exportVar($data);
+		$expected = <<<TEXT
+array(
+	'nothing' => '',
+	'null' => null,
+	'false' => false,
+	'szero' => '0',
+	'zero' => (int) 0
+)
 TEXT;
 		$this->assertTextEquals($expected, $result);
 	}

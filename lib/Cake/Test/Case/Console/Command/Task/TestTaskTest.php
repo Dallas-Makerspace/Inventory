@@ -349,7 +349,7 @@ class TestTaskTest extends CakeTestCase {
 		));
 		$keys = ClassRegistry::keys();
 		$this->assertTrue(in_array('test_task_comment', $keys));
-		$object = $this->Task->buildTestSubject('Model', 'TestTaskComment');
+		$this->Task->buildTestSubject('Model', 'TestTaskComment');
 
 		$keys = ClassRegistry::keys();
 		$this->assertFalse(in_array('random', $keys));
@@ -425,7 +425,7 @@ class TestTaskTest extends CakeTestCase {
 	}
 
 /**
- * test baking files.  The conditionally run tests are known to fail in PHP4
+ * test baking files. The conditionally run tests are known to fail in PHP4
  * as PHP4 classnames are all lower case, breaking the plugin path inflection.
  *
  * @return void

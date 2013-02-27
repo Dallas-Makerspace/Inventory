@@ -227,13 +227,11 @@ class String {
 
 		asort($data);
 
-		$hashKeys = array();
-		foreach ($data as $key => $value) {
-			$hashKeys[] = crc32($key);
-		}
-
-		$tempData = array_combine(array_keys($data), array_values($hashKeys));
+		$dataKeys = array_keys($data);
+		$hashKeys = array_map('crc32', $dataKeys);
+		$tempData = array_combine($dataKeys, $hashKeys);
 		krsort($tempData);
+
 		foreach ($tempData as $key => $hashVal) {
 			$key = sprintf($format, preg_quote($key, '/'));
 			$str = preg_replace($key, $hashVal, $str);
@@ -320,7 +318,7 @@ class String {
  *
  * ### Options
  *
- * - `width` The width to wrap to.  Defaults to 72
+ * - `width` The width to wrap to. Defaults to 72
  * - `wordWrap` Only wrap on words breaks (spaces) Defaults to true.
  * - `indent` String to indent with. Defaults to null.
  * - `indentAt` 0 based index to start indenting at. Defaults to 0.
@@ -563,7 +561,7 @@ class String {
 						}
 					} else {
 						foreach ($droppedTags as $closingTag) {
-							array_push($openTags, $closingTag[1]);
+							$openTags[] = $closingTag[1];
 						}
 					}
 				}

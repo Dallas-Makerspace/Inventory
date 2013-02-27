@@ -30,7 +30,7 @@ class ApcEngine extends CacheEngine {
  * (prefixed witht the global configuration prefix)
  *
  * @var array
- **/
+ */
 	protected $_compiledGroupNames = array();
 
 /**
@@ -117,10 +117,10 @@ class ApcEngine extends CacheEngine {
 	}
 
 /**
- * Delete all keys from the cache.  This will clear every cache config using APC.
+ * Delete all keys from the cache. This will clear every cache config using APC.
  *
  * @param boolean $check If true, nothing will be cleared, as entries are removed
- *    from APC as they expired.  This flag is really only used by FileEngine.
+ *    from APC as they expired. This flag is really only used by FileEngine.
  * @return boolean True Returns true.
  */
 	public function clear($check) {
@@ -144,7 +144,7 @@ class ApcEngine extends CacheEngine {
  * the group accordingly.
  *
  * @return array
- **/
+ */
 	public function groups() {
 		if (empty($this->_compiledGroupNames)) {
 			foreach ($this->settings['groups'] as $group) {
@@ -176,7 +176,7 @@ class ApcEngine extends CacheEngine {
  * old values will remain in storage until they expire.
  *
  * @return boolean success
- **/
+ */
 	public function clearGroup($group) {
 		apc_inc($this->settings['prefix'] . $group, 1, $success);
 		return $success;

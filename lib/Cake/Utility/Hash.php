@@ -20,7 +20,7 @@ App::uses('String', 'Utility');
  * from arrays or 'sets' of data.
  *
  * `Hash` provides an improved interface, more consistent and
- * predictable set of features over `Set`.  While it lacks the spotty
+ * predictable set of features over `Set`. While it lacks the spotty
  * support for pseudo Xpath, its more fully featured dot notation provides
  * similar features in a more consistent implementation.
  *
@@ -39,10 +39,10 @@ class Hash {
  * @return mixed The value fetched from the array, or null.
  */
 	public static function get(array $data, $path) {
-		if (empty($data) || empty($path)) {
+		if (empty($data)) {
 			return null;
 		}
-		if (is_string($path)) {
+		if (is_string($path) || is_numeric($path)) {
 			$parts = explode('.', $path);
 		} else {
 			$parts = $path;
@@ -83,7 +83,7 @@ class Hash {
  *
  * @param array $data The data to extract from.
  * @param string $path The path to extract.
- * @return array An array of the extracted values.  Returns an empty array
+ * @return array An array of the extracted values. Returns an empty array
  *   if there are no matches.
  */
 	public static function extract(array $data, $path) {
@@ -96,7 +96,7 @@ class Hash {
 			return (array)self::get($data, $path);
 		}
 
-		if (strpos('[', $path) === false) {
+		if (strpos($path, '[') === false) {
 			$tokens = explode('.', $path);
 		} else {
 			$tokens = String::tokenize($path, '.', '[', ']');
@@ -117,7 +117,7 @@ class Hash {
 			}
 
 			foreach ($context[$_key] as $item) {
-				foreach ($item as $k => $v) {
+				foreach ((array)$item as $k => $v) {
 					if (self::_matchToken($k, $token)) {
 						$next[] = $v;
 					}
@@ -479,7 +479,7 @@ class Hash {
  * Recursively filters a data set.
  *
  * @param array $data Either an array to filter, or value when in callback
- * @param callable $callback A function to filter the data with.  Defaults to
+ * @param callable $callback A function to filter the data with. Defaults to
  *   `self::_filter()` Which strips out all non-zero empty values.
  * @return array Filtered array
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::filter
@@ -532,6 +532,7 @@ class Hash {
 					$stack[] = array($data, $path);
 				}
 				$data = $element;
+				reset($data);
 				$path .= $key . $separator;
 			} else {
 				$result[$path . $key] = $element;
@@ -539,6 +540,7 @@ class Hash {
 
 			if (empty($data) && !empty($stack)) {
 				list($data, $path) = array_pop($stack);
+				reset($data);
 			}
 		}
 		return $result;
@@ -578,7 +580,7 @@ class Hash {
  * This function can be thought of as a hybrid between PHP's `array_merge` and `array_merge_recursive`.
  *
  * The difference between this method and the built-in ones, is that if an array key contains another array, then
- * Hash::merge() will behave in a recursive fashion (unlike `array_merge`).  But it will not act recursively for
+ * Hash::merge() will behave in a recursive fashion (unlike `array_merge`). But it will not act recursively for
  * keys that contain scalar values (unlike `array_merge_recursive`).
  *
  * Note: This function will work with an unlimited amount of arguments and typecasts non-array parameters into arrays.
@@ -596,7 +598,7 @@ class Hash {
 			foreach ((array)$arg as $key => $val) {
 				if (!empty($return[$key]) && is_array($return[$key]) && is_array($val)) {
 					$return[$key] = self::merge($return[$key], $val);
-				} elseif (is_int($key)) {
+				} elseif (is_int($key) && isset($return[$key])) {
 					$return[] = $val;
 				} else {
 					$return[$key] = $val;
@@ -699,6 +701,17 @@ class Hash {
  * Apply a callback to a set of extracted values using `$function`.
  * The function will get the extracted values as the first argument.
  *
+ * ### Example
+ *
+ * You can easily count the results of an extract using apply().
+ * For example to count the comments on an Article:
+ *
+ * `$count = Hash::apply($data, 'Article.Comment.{n}', 'count');`
+ *
+ * You could also use a function like `array_sum` to sum the results.
+ *
+ * `$total = Hash::apply($data, '{n}.Item.price', 'array_sum');`
+ *
  * @param array $data The data to reduce.
  * @param string $path The path to extract from $data.
  * @param callable $function The function to call on each extracted value.
@@ -719,10 +732,11 @@ class Hash {
  *
  * ## Sort types
  *
- * - `numeric` Sort by numeric value.
- * - `regular` Sort by numeric value.
- * - `string` Sort by numeric value.
- * - `natural` Sort by natural order. Requires PHP 5.4 or greater.
+ * - `regular` For regular sorting (don't change types)
+ * - `numeric` Compare values numerically
+ * - `string` Compare values as strings
+ * - `natural` Compare items as strings using "natural ordering" in a human friendly way.
+ *   Will sort foo10 below foo2 as an example. Requires PHP 5.4 or greater or it will fallback to 'regular'
  *
  * @param array $data An array of data to sort
  * @param string $path A Set-compatible path to the array value
@@ -756,7 +770,7 @@ class Hash {
 		$dir = strtolower($dir);
 		$type = strtolower($type);
 		if ($type == 'natural' && version_compare(PHP_VERSION, '5.4.0', '<')) {
-			$type == 'regular';
+			$type = 'regular';
 		}
 		if ($dir === 'asc') {
 			$dir = SORT_ASC;

@@ -58,7 +58,7 @@ class ControllerTestDispatcher extends Dispatcher {
 		$this->testController->helpers = array_merge(array('InterceptContent'), $this->testController->helpers);
 		$this->testController->setRequest($request);
 		$this->testController->response = $this->response;
-		foreach ($this->testController->Components->attached() as $component) {
+		foreach ($this->testController->Components->loaded() as $component) {
 			$object = $this->testController->Components->{$component};
 			if (isset($object->response)) {
 				$object->response = $response;
@@ -196,16 +196,16 @@ abstract class ControllerTestCase extends CakeTestCase {
  *
  * ### Options:
  *
- * - `data` Will be used as the request data.  If the `method` is GET,
- *   data will be used a GET params.  If the `method` is POST, it will be used
+ * - `data` Will be used as the request data. If the `method` is GET,
+ *   data will be used a GET params. If the `method` is POST, it will be used
  *   as POST data. By setting `$options['data']` to a string, you can simulate XML or JSON
  *   payloads to your controllers allowing you to test REST webservices.
  * - `method` POST or GET. Defaults to POST.
- * - `return` Specify the return type you want.  Choose from:
+ * - `return` Specify the return type you want. Choose from:
  *     - `vars` Get the set view variables.
  *     - `view` Get the rendered view, without a layout.
  *     - `contents` Get the rendered view including the layout.
- *     - `result` Get the return value of the controller action.  Useful
+ *     - `result` Get the return value of the controller action. Useful
  *       for testing requestAction methods.
  *
  * @param string $url The url to test

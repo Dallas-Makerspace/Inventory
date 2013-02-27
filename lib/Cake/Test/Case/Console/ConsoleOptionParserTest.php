@@ -79,6 +79,18 @@ class ConsoleOptionParserTest extends CakeTestCase {
 	}
 
 /**
+ * test adding an option with a zero value
+ *
+ * @return void
+ */
+	public function testAddOptionZero() {
+		$parser = new ConsoleOptionParser('test', false);
+		$parser->addOption('count', array());
+		$result = $parser->parse(array('--count', '0'));
+		$this->assertEquals(array('count' => '0', 'help' => false), $result[0], 'Zero parameter did not parse out');
+	}
+
+/**
  * test addOption with an object.
  *
  * @return void
@@ -247,7 +259,7 @@ class ConsoleOptionParserTest extends CakeTestCase {
 		$parser = new ConsoleOptionParser('test', false);
 		$parser->addOption('no-commit', array('boolean' => true));
 
-		$result = $parser->parse(array('--fail', 'other'));
+		$parser->parse(array('--fail', 'other'));
 	}
 
 /**
@@ -259,7 +271,7 @@ class ConsoleOptionParserTest extends CakeTestCase {
 		$parser = new ConsoleOptionParser('test', false);
 		$parser->addOption('no-commit', array('boolean' => true));
 
-		$result = $parser->parse(array('-f'));
+		$parser->parse(array('-f'));
 	}
 
 /**

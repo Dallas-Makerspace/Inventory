@@ -96,7 +96,7 @@ class ControllerTask extends BakeTask {
 	}
 
 /**
- * Bake All the controllers at once.  Will only bake controllers for models that exist.
+ * Bake All the controllers at once. Will only bake controllers for models that exist.
  *
  * @return void
  */
@@ -105,12 +105,22 @@ class ControllerTask extends BakeTask {
 		$this->listAll($this->connection, false);
 		ClassRegistry::config('Model', array('ds' => $this->connection));
 		$unitTestExists = $this->_checkUnitTest();
+
+		$admin = false;
+		if (!empty($this->params['admin'])) {
+			$admin = $this->Project->getPrefix();
+		}
+
 		foreach ($this->__tables as $table) {
 			$model = $this->_modelName($table);
 			$controller = $this->_controllerName($model);
 			App::uses($model, 'Model');
 			if (class_exists($model)) {
 				$actions = $this->bakeActions($controller);
+				if ($admin) {
+					$this->out(__d('cake_console', 'Adding %s methods', $admin));
+					$actions .= "\n" . $this->bakeActions($controller, $admin);
+				}
 				if ($this->bake($controller, $actions) && $unitTestExists) {
 					$this->bakeTest($controller);
 				}

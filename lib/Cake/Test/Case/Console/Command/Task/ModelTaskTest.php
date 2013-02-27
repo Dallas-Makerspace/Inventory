@@ -62,7 +62,7 @@ class ModelTaskTest extends CakeTestCase {
 	}
 
 /**
- * Setup a mock that has out mocked.  Normally this is not used as it makes $this->at() really tricky.
+ * Setup a mock that has out mocked. Normally this is not used as it makes $this->at() really tricky.
  *
  * @return void
  */
@@ -173,7 +173,7 @@ class ModelTaskTest extends CakeTestCase {
 		$this->Task->expects($this->any())->method('in')->will($this->onConsecutiveCalls(99, 1));
 		$this->Task->expects($this->once())->method('err');
 
-		$result = $this->Task->getName('test');
+		$this->Task->getName('test');
 	}
 
 /**

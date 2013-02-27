@@ -195,6 +195,22 @@ class SecurityComponentTest extends CakeTestCase {
 	}
 
 /**
+ * Ensure that directly requesting the blackholeCallback as the controller
+ * action results in an exception.
+ *
+ * @return void
+ */
+	public function testExceptionWhenActionIsBlackholeCallback() {
+		$this->Controller->request->addParams(array(
+			'controller' => 'posts',
+			'action' => 'fail'
+		));
+		$this->assertFalse($this->Controller->failed);
+		$this->Controller->Security->startup($this->Controller);
+		$this->assertTrue($this->Controller->failed, 'Request was blackholed.');
+	}
+
+/**
  * test that initialize can set properties.
  *
  * @return void
@@ -716,7 +732,7 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
 
-		$this->Controller->request->data = $data = array(
+		$this->Controller->request->data = array(
 			'Model' => array('username' => '', 'password' => '', 'valid' => '0'),
 			'_Token' => compact('key', 'fields', 'unlocked')
 		);
@@ -1158,7 +1174,7 @@ class SecurityComponentTest extends CakeTestCase {
 
 		$token = $this->Security->Session->read('_Token');
 		$this->assertEquals(2, count($token['csrfTokens']), 'Missing the csrf token.');
-		foreach ($token['csrfTokens'] as $key => $expires) {
+		foreach ($token['csrfTokens'] as $expires) {
 			$diff = $csrfExpires - $expires;
 			$this->assertTrue($diff === 0 || $diff === 1, 'Token expiry does not match');
 		}
