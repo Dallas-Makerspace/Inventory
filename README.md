@@ -16,7 +16,7 @@ Installation
 
 Installing this application is fairly easy, just follow these steps:
 
-1. Download the latest version with git (`git clone https://github.com/aceat64/Dallas-Makerspace-Inventory.git`)
+1. Download the latest version with git (`git clone https://github.com/Dallas-Makerspace/Inventory.git`)
 
 2. In the app/config directory, rename core.php.default and database.php.default to core.php and database.php.default respectively.
 
