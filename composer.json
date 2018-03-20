@@ -1,0 +1,51 @@
+{
+    "name": "cakephp/app",
+    "description": "DMS Inventory manager",
+    "homepage": "https://inventory.dallasmakerspace.org",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5.9",
+        "cakephp/cakephp": "~3.4",
+        "mobiledetect/mobiledetectlib": "2.*",
+        "cakephp/migrations": "~1.0",
+        "cakephp/plugin-installer": "*",
+        "friendsofcake/bootstrap-ui": "^0.5.0",
+        "friendsofcake/cakephp-csvview": "~3.0",
+        "syntaxera/cakephp-sparkpost-plugin": "^0.4.5",
+        "unholyknight/active-directory-authenticate": "master",
+        "friendsofcake/crud": "^4.3",
+        "josegonzalez/cakephp-upload": "^3.4",
+        "braintree/braintree_php": "~3.0",
+        "adldap2/adldap2": "~6.0",
+        "twilio/sdk": "^4.10",
+        "php-coveralls/php-coveralls": "^2.0"
+    },
+    "require-dev": {
+        "psy/psysh": "@stable",
+        "cakephp/debug_kit": "~3.2",
+        "cakephp/bake": "~1.1"
+    },
+    "suggest": {
+        "phpunit/phpunit": "Allows automated tests to be run without system-wide install.",
+        "cakephp/cakephp-codesniffer": "Allows to check the code against the coding standards used in CakePHP."
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": "App\\Console\\Installer::postInstall",
+        "post-create-project-cmd": "App\\Console\\Installer::postInstall",
+        "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
