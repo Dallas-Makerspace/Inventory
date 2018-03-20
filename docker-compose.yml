@@ -1,0 +1,31 @@
+version: '2'
+services:
+    db:
+        image: mariadb:5.5
+        ports:
+            - "3306:3306"
+        environment:
+          MYSQL_ROOT_PASSWORD: 'cakephp'
+          MYSQL_DATABASE: 'cakephp'
+    app:
+        build: .
+        volumes:
+            - ./logs/cakephp:/www/app/logs
+        links:
+            - db
+        environment:
+          DEBUG: 'true'
+          DB_HOST: 'db' # Leave this as 'db' to utilize MySQL container(s)
+          DB_USERNAME: 'root'
+          DB_PASSWORD: 'cakephp'
+          DB_DATABASE: 'cakephp'
+          DB_SEED: 'DatabaseSeed'
+          VIRTUAL_HOST: 'inventory.dallasmakerspace.org'
+          EMAIL_HOST: 'localhost'
+          EMAIL_PORT: '25'
+          EMAIL_TIMEOUT: '30'
+          EMAIL_USERNAME: 'user'
+          EMAIL_PASSWORD: 'secret'
+          EMAIL_TLS: 'false'
+          REPO: 'https://github.com/Dallas-Makerspace/inventory.git'
+          REPO_HOST: 'github.com'
