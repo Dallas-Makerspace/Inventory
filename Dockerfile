@@ -1,5 +1,5 @@
-MAINTAINER infrastructure@dallasmakerspace.org
 FROM php:7-apache
+MAINTAINER infrastructure@dallasmakerspace.org
 
 ARG FWATCHDOG_VERSION "0.7.1"
 
