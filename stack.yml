@@ -1,9 +1,0 @@
----
-provider:
-    name: communitygrid
-    gateway: http://apps.communitygrid.dms.local
-
-functions:
-    voting:
-        lang: dockerfile
-        image: dallasmakerspace/Inventory:latest
