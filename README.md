@@ -14,4 +14,4 @@ Installing this application is fairly easy, just follow these steps:
 1. Download the latest version with git (`git clone https://github.com/Dallas-Makerspace/Inventory.git`)
 2. In the app/config directory, rename core.php.default and database.php.default to core.php and database.php.default respectively.
 3. Modify the `core.php` and `database.php` files to suit your environment.
-4. Run `docker-compose up` with the latest version of docker and docker-compose with your DOCKER_HOST pointed to `apps.communitygrid.dms.local` or `localhost`.
+4. Run `docker build -t dallas-makerspace/inventory:latest . && docker stack deploy -c docker-compose.yml dms-inventory` with the latest version of docker and docker with your DOCKER_HOST pointed to `communitygrid.dallasmakerspace.org` or `localhost`.

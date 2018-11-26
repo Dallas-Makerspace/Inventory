@@ -1,30 +1,35 @@
-FROM php:7-apache
-MAINTAINER infrastructure@dallasmakerspace.org
+FROM hhvm/hhvm-proxygen:latest
 
-ARG FWATCHDOG_VERSION "0.7.1"
+ARG VERSION="1.0.0"
+ARG VCS_URL="https://github.com/Dallas-Makerspace/Inventory.git"
+ARG VCS_REF="git ref-parse --short HEAD"
+ARG BUILD_DATE="2018-11-26T13:22:50Z"
+
+ENV DEBIAN_FRONTEND noninteractive
 
 EXPOSE 80
 
-ENV VIRTUAL_PORT 80
-ENV VIRTUAL_PROTO http
+LABEL org.label-schema.docker.maintainer="infrastructure@dallasmakerspace.org" \
+      org.label-schema.vendor="Dallas Makerspace" \
+      org.label-schema.url="https://github.com/Dallas-Makerspace/Inventory" \
+      org.label-schema.name="DMS Inventory" \
+      org.label-schema.description="Inventory management system designed for the dallas makerspace" \
+      org.label-schema.version="${VERSION}" \
+      org.label-schema.vcs-url="${VCS_URL}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.docker.schema-version="1.0" \
+      traefik.port=80 \
+      traefik.enable=true
 
 HEALTHCHECK --interval=5s CMD 'curl -sSlk http://localhost/'
 
-COPY . /var/www/html/
+RUN apt-get update && apt-get install -y --force-yes curl language-pack-en git npm nodejs-legacy nginx mysql-client && \
+    mkdir /opt/composer && \
+    curl -sS https://getcomposer.org/installer | hhvm --php -- --install-dir=/opt/composer && \
+    rm -rf /var/www
 
-RUN a2enmod rewrite && \
-    apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libmcrypt-dev \
-        libpng12-dev \
-        zlib1g-dev \
-        libicu-dev \
-        g++ \
-    && curl -sL https://github.com/openfaas/faas/releases/download/${FWATCHDOG_VERSION}/fwatchdog > /usr/bin/fwatchdog \
-    && chmod +x /usr/bin/fwatchdog \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-install -j$(nproc) iconv mcrypt intl pdo pdo_mysql mbstring \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd \
-    && chmod -R 777 /var/www/html/{tmp,logs}
+COPY . /var/www/
+WORKDIR /var/www
+
+RUN  /opt/composer/composer.phar install

@@ -1,31 +1,105 @@
-version: '2'
+---
+version: '3.4'
+
+x-timezone: &default_timezone
+  TZ: "America/Chicago"
+
+x-network: &default_network
+  dns: '1.1.1.1'
+  dns_search: 'dallasmakerspace.org'
+  networks:
+    - public
+
+x-proxy-env: &default_proxy
+  - http_proxy="http://proxy.local:8118"
+  - https_proxy="https://proxy.local:8118"
+  - socks_proxy="proxy.local:9051"
+  - no_proxy="127.0.0.1,localhost,.localdomain,.local"
+  - HTTP_PROXY="http://proxy.local:8118"
+  - HTTPS_PROXY="https://proxy.local:8118"
+  - SOCKS_PROXY="proxy.local:9051"
+  - NO_PROXY="127.0.0.1,localhost,.localdomain,.local"
+
+x-logging: &default_logging
+  driver: 'syslog'
+  options:
+    syslog-address: 'udp://telegraf.local:6514'
+
+x-deployment: &default_deployment
+  restart_policy:
+    condition: on-failure
+  mode: replicated
+  replicas: 1
+
+x-platform-enable: &enable_paas
+  traefik.frontend.priority: "5"
+  traefik.frontend.entryPoints: "http, https"
+  traefik.docker.network: "public"
+  traefik.enable: "true"
+  traefik.default.protocol: "http"
+  orbiter: "true"
+  orbiter.up: "3"
+  orbiter.down: "1"
+
+x-platform-disable: &disable_paas
+  traefik.enable: "false"
+  orbiter: "false"
+
 services:
+
     db:
-        image: mariadb:5.5
-        ports:
-            - "3306:3306"
-        environment:
-          MYSQL_ROOT_PASSWORD: 'cakephp'
-          MYSQL_DATABASE: 'cakephp'
+      image: mariadb:5.5
+      network:
+        default:
+          aliases:
+            - "db"
+      ports:
+        - "3306"
+      environment:
+        MYSQL_ROOT_PASSWORD: 'cakephp'
+        MYSQL_DATABASE: 'cakephp'
+
     app:
-        build: .
-        volumes:
-            - ./logs/cakephp:/www/app/logs
-        links:
-            - db
-        environment:
-          DEBUG: 'true'
-          DB_HOST: 'db' # Leave this as 'db' to utilize MySQL container(s)
-          DB_USERNAME: 'root'
-          DB_PASSWORD: 'cakephp'
-          DB_DATABASE: 'cakephp'
-          DB_SEED: 'DatabaseSeed'
-          VIRTUAL_HOST: 'inventory.dallasmakerspace.org'
-          EMAIL_HOST: 'localhost'
-          EMAIL_PORT: '25'
-          EMAIL_TIMEOUT: '30'
-          EMAIL_USERNAME: 'user'
-          EMAIL_PASSWORD: 'secret'
-          EMAIL_TLS: 'false'
-          REPO: 'https://github.com/Dallas-Makerspace/inventory.git'
-          REPO_HOST: 'github.com'
+      image: dallas-makerspace/inventory:latest
+      links:
+        - 'db'
+      depends_on: 
+        - 'db'
+      ports:
+        - "80/tcp"
+      environment:
+        DEBUG: 'true'
+        DB_HOST: 'db' # Leave this as 'db' to utilize MySQL container(s)
+        DB_USERNAME: 'root'
+        DB_PASSWORD: 'cakephp'
+        DB_DATABASE: 'cakephp'
+        DB_SEED: 'DatabaseSeed'
+        EMAIL_HOST: 'localhost'
+        EMAIL_PORT: '25'
+        EMAIL_TIMEOUT: '30'
+        EMAIL_USERNAME: 'user'
+        EMAIL_PASSWORD: 'secret'
+        EMAIL_TLS: 'false'
+        REPO: 'https://github.com/Dallas-Makerspace/inventory.git'
+        REPO_HOST: 'github.com'
+      << : *default_network
+      networks:
+        - public
+        - default
+      deploy:
+        << : *default_deployment
+        labels:
+          << : *enable_paas
+          traefik.frontend.rule: 'Host:inventory.dallasmakerspace.org'
+          traefik.port: "80"
+
+networks:
+
+  public:
+    external:
+      name: "public"
+
+  default: {}
+
+...
+# vim: set sw=2 sts=2 ts=2 et ai numbers list :
