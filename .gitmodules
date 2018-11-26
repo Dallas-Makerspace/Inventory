@@ -1,6 +1,6 @@
 [submodule "app/Plugin/AuditLog"]
-	path = app/Plugin/AuditLog
+	path = src/app/Plugin/AuditLog
 	url = git://github.com/robwilkerson/CakePHP-Audit-Log-Plugin.git
 [submodule "app/Plugin/HabtmCounterCache"]
-	path = app/Plugin/HabtmCounterCache
+	path = src/app/Plugin/HabtmCounterCache
 	url = git://github.com/neilcrookes/CakePHP-HABTM-Counter-Cache-Plugin.git

@@ -26,10 +26,10 @@ HEALTHCHECK --interval=5s CMD 'curl -sSlk http://localhost/'
 
 RUN apt-get update && apt-get install -y --force-yes curl language-pack-en git npm nodejs-legacy nginx mysql-client && \
     mkdir /opt/composer && \
-    curl -sS https://getcomposer.org/installer | hhvm --php -- --install-dir=/opt/composer && \
-    rm -rf /var/www
+    curl -sS https://getcomposer.org/installer | hhvm --php -- --install-dir=/opt/composer
 
-COPY . /var/www/
+COPY build.xml build.properties composer.json LICENSE /var/www/
+COPY src /var/www/public/
+
 WORKDIR /var/www
-
 RUN  /opt/composer/composer.phar install
